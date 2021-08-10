@@ -1,7 +1,9 @@
 import Vue from 'vue';
-import wrap from '@vue/web-component-wrapper';
 import WebFoto from './WebFoto.vue';
 
-const CustomElement = wrap(Vue, WebFoto);
+Vue.config.productionTip = false;
 
-window.customElements.define('web-foto', CustomElement as any);
+
+new Vue({
+    render: h => h(WebFoto)
+}).$mount('#app');
