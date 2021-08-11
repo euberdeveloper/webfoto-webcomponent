@@ -3,15 +3,15 @@
     <div class="controller-container">
       <div class="triangle" />
       <div class="controller">
-        <incrementor class="incrementor" :text="day" @increment="$emit('increment', 'day')" @decrement="$emit('decrement', 'day')" />
+        <incrementor class="incrementor" :text="day" :disabledIncrement="isLastDay" :disabledDecrement="isFirstDay" @increment="$emit('increment', 'day')" @decrement="$emit('decrement', 'day')" />
         <span class="text">/</span>
-        <incrementor class="incrementor" :text="month" @increment="$emit('increment', 'month')" @decrement="$emit('decrement', 'month')" />
+        <incrementor class="incrementor" :text="month" :disabledIncrement="isLastMonth" :disabledDecrement="isFirstMonth" @increment="$emit('increment', 'month')" @decrement="$emit('decrement', 'month')" />
         <span class="text">/</span>
-        <incrementor class="incrementor" :text="year" @increment="$emit('increment', 'year')" @decrement="$emit('decrement', 'year')" />
+        <incrementor class="incrementor" :text="year" :disabledIncrement="isLastYear" :disabledDecrement="isFirstYear" @increment="$emit('increment', 'year')" @decrement="$emit('decrement', 'year')" />
         <span class="divider" />
-        <incrementor class="incrementor" :text="hours" @increment="$emit('increment', 'hours')" @decrement="$emit('decrement', 'hours')" />
+        <incrementor class="incrementor" :text="hours" :disabledIncrement="isLastHour" :disabledDecrement="isFirstHour" @increment="$emit('increment', 'hours')" @decrement="$emit('decrement', 'hours')" />
         <span class="text">:</span>
-        <incrementor class="incrementor" :text="minutes" @increment="$emit('increment', 'minutes')" @decrement="$emit('decrement', 'minutes')" />
+        <incrementor class="incrementor" :text="minutes" :disabledIncrement="isLastMinute" :disabledDecrement="isFirstMinisLastMinute" @increment="$emit('increment', 'minutes')" @decrement="$emit('decrement', 'minutes')" />
         <span class="divider" />
         <button class="clickable" :disabled="isLastDate" @click="$emit('current')">Current</button>
       </div>
@@ -35,8 +35,8 @@ export default class Controllers extends Vue {
   @Prop({ type: Date, required: true })
   value!: Date;
 
-  @Prop({ type: Boolean, required: true })
-  isLastDate!: boolean;
+  @Prop({ type: Array, required: true })
+  dates!: Date[];
 
   /* GETTERS AND SETTERS */
 
@@ -73,12 +73,80 @@ export default class Controllers extends Vue {
     return this.twoDigits(hour);
   }
   get minutes(): string {
-    const format = new Intl.DateTimeFormat(undefined, { minute: '2-digit' });
+    const format = new Intl.DateTimeFormat(undefined, { minute: "2-digit" });
     const parts = format.formatToParts(this.internalValue);
     const minute = parts.find((el) => el.type === "minute")?.value ?? "";
     return this.twoDigits(minute);
   }
 
+  get isLastDate(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+
+    return +this.internalValue === +this.dates[this.dates.length - 1];
+  }
+
+  get isLastYear(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+
+    return +this.internalValue.getFullYear() === +this.dates[this.dates.length - 1].getFullYear();
+  }
+  get isFirstYear(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+
+    return +this.internalValue.getFullYear() === +this.dates[0].getFullYear();
+  }
+
+  get isLastMonth(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+    return this.isLastYear && +this.internalValue.getMonth() === +this.dates[this.dates.length - 1].getMonth();
+  }
+  get isFirstMonth(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+    return this.isFirstYear && +this.internalValue.getMonth() === +this.dates[0].getMonth();
+  }
+
+  get isLastDay(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+    return this.isLastMonth && +this.internalValue.getDate() === +this.dates[this.dates.length - 1].getDate();
+  }
+  get isFirstDay(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+    return this.isFirstMonth && +this.internalValue.getDate() === +this.dates[0].getDate();
+  }
+
+  get isLastHour(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+    return this.isLastDay && +this.internalValue.getHours() === +this.dates[this.dates.length - 1].getHours();
+  }
+  get isFirstHour(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+    return this.isFirstDay && +this.internalValue.getHours() === +this.dates[0].getHours();
+  }
+
+  get isLastMinute(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+    return this.isLastHour && +this.internalValue.getMinutes() === +this.dates[this.dates.length - 1].getMinutes();
+  }
   /* METHODS */
 
   private twoDigits(value: string): string {

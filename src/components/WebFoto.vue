@@ -2,7 +2,7 @@
   <div class="web-foto">
     <image-displayer class="image-displayer" :image="currentImagePath" :loading.sync="loadingImage" v-if="currentImagePath" />
     <loading-spinner class="loading-spinner" :color="spinnerColor" :show="loadingImage" />
-    <date-controller class="controllers" :value="currentImageDate" :isLastDate="isLastDate" @current="goToLastImage"  v-if="currentImageDate" />
+    <date-controller class="controllers" :value="currentImageDate" :dates="images" @current="goToLastImage" v-if="currentImageDate" />
   </div>
 </template>
 
@@ -46,14 +46,6 @@ export default class WebFoto extends Vue {
     return this.currentImageDate ? `${this.apiUrl}/${this.name}/${this.name}_${this.currentImageDate.toISOString()}.jpg` : null;
   }
 
-  get isLastDate(): boolean {
-    if (this.currentImageDate === null) {
-      return false;
-    }
-
-    return +this.currentImageDate === +this.images[this.images.length - 1];
-  }
-
   /* METHODS */
 
   goToLastImage(): void {
@@ -64,8 +56,7 @@ export default class WebFoto extends Vue {
 
   async mounted(): Promise<void> {
     this.images = await getImages(this.apiUrl, this.name);
-    this.currentImageDate = this.images[0];
-    // this.goToLastImage();
+    this.goToLastImage();
   }
 }
 </script>

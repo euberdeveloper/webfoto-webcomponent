@@ -1,10 +1,10 @@
 <template>
   <div class="incrementor">
-    <button class="button" @click="$emit('increment')">
+    <button class="button" :disabled="disabledIncrement" @click="$emit('increment')">
       <span class="arrow-up" />
     </button>
     <span class="text">{{ text }}</span>
-    <button class="button" @click="$emit('decrement')">
+    <button class="button" :disabled="disabledDecrement" @click="$emit('decrement')">
       <span class="arrow-down" />
     </button>
   </div>
@@ -19,11 +19,17 @@ export default class DateController extends Vue {
 
   @Prop({ type: String, required: true })
   text!: string;
+
+  @Prop({ type: Boolean, default: false })
+  disabledIncrement!: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  disabledDecrement!: boolean;
 }
 </script>
 
 <style lang="scss" scoped>
-@mixin arrow() {
+@mixin arrow($disabled: false) {
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
@@ -39,6 +45,11 @@ export default class DateController extends Vue {
     border-bottom-color: #ad0000;
     border-top-color: #ad0000;
   }
+
+  @if $disabled {
+    border-bottom-color: #9a9ea1;
+    border-top-color: #9a9ea1;
+  }
 }
 
 .incrementor {
@@ -49,17 +60,6 @@ export default class DateController extends Vue {
 
   padding: 0 2px;
 
-  .arrow-up {
-    @include arrow();
-    border-bottom: 5px solid white;
-    bottom: 3px;
-  }
-  .arrow-down {
-    @include arrow();
-    border-top: 5px solid white;
-    top: 3.5px;
-  }
-
   .button {
     position: relative;
     cursor: pointer;
@@ -69,7 +69,25 @@ export default class DateController extends Vue {
     border: 0;
 
     text-align: center;
+
+    .arrow-up {
+      @include arrow();
+      border-bottom: 5px solid white;
+      bottom: 3px;
+    }
+    .arrow-down {
+      @include arrow();
+      border-top: 5px solid white;
+      top: 3.5px;
+    }
+
+    &:disabled {
+      .arrow-up, .arrow-down {
+        @include arrow(true);
+      }
+    }
   }
+  
 
   .text {
     text-align: center;
