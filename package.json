@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target wc --name web-foto ./src/main.prod.ts",
+    "build": "vue-cli-service build --target wc --name web-foto ./src/components/WebFoto.vue",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

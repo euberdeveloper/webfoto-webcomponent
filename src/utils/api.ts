@@ -1,12 +1,12 @@
-import { ImageInfo } from "@/types";
-
-function purgeImageInfoDate(imageInfo: ImageInfo): ImageInfo {
-    imageInfo.timestamp = new Date(imageInfo.timestamp);
-    return imageInfo;
+export async function getImages(apiUrl: string, name: string): Promise<Date[]> {
+    const response = await fetch(`${apiUrl}/api/albums/${name}/images`);
+    const result: Date[] = await response.json();
+    return result.map(date => new Date(date));
 }
 
-export async function getImages(apiUrl: string, name: string): Promise<ImageInfo[]> {
-    const response = await fetch(`${apiUrl}/albums/${name}/images`);
-    const result: ImageInfo[] = await response.json();
-    return result.map(el => purgeImageInfoDate(el));
+export async function fetchImage(url: string): Promise<string> {
+    const response = await fetch(url);
+    const imageBlob = await response.blob();
+    const imageUrl = URL.createObjectURL(imageBlob);
+    return imageUrl;
 }

@@ -1,9 +1,9 @@
 import Vue from 'vue';
-import WebFoto from './WebFoto.vue';
+import App from './App.vue';
 
 Vue.config.productionTip = false;
 
 
 new Vue({
-    render: h => h(WebFoto)
+    render: h => h(App)
 }).$mount('#app');
