@@ -78,14 +78,13 @@ export default class ImageDisplayer extends Vue {
 
   private prepareImageSwap(newImageUrl: string): void {
     this.oldImage.src = newImageUrl;
-    this.oldImage.style.zIndex = "0";
-    this.currentImage.style.zIndex = "1";
+    this.oldImage.style.zIndex = "-1";
+    this.currentImage.style.zIndex = "0";
     this.ghost.src = newImageUrl;
   }
 
   private async imageChanged(): Promise<void> {
     const newImageUrl = await this.fetchImage();
-    console.log(newImageUrl);
     this.prepareImageSwap(newImageUrl);
     this.incrementIndex();
   }
@@ -110,11 +109,11 @@ export default class ImageDisplayer extends Vue {
   position: relative;
 
   .image {
-    display: block;
     position: absolute;
     top: 0;
     left: 0;
 
+    display: block;
     width: 100%;
   }
 

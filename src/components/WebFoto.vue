@@ -1,8 +1,8 @@
 <template>
   <div class="web-foto">
-    <loading-spinner class="cover layer loading-spinner" :color="spinnerColor" :show="loadingImage" />
-    <image-displayer class="cover" :image="currentImagePath" :loading.sync="loadingImage" v-if="currentImagePath" />
-    <date-controller class="cover layer" :value.sync="currentImageDate" :dates="images" v-if="currentImageDate" />
+    <image-displayer class="image-displayer" :image="currentImagePath" :loading.sync="loadingImage" v-if="currentImagePath" />
+    <loading-spinner class="loading-spinner" :color="spinnerColor" :show="loadingImage" />
+    <date-controller class="controllers" :value="currentImageDate" :isLastDate="isLastDate" @current="goToLastImage"  v-if="currentImageDate" />
   </div>
 </template>
 
@@ -13,13 +13,13 @@ import { getImages } from "@/utils/api";
 
 import ImageDisplayer from "@/components/gears/ImageDisplayer.vue";
 import LoadingSpinner from "@/components/gears/LoadingSpinner.vue";
-import DateController from "@/components/gears/DateController.vue";
+import DateController from "@/components/gears/Controllers.vue";
 
 @Component({
   components: {
     ImageDisplayer,
     LoadingSpinner,
-    DateController
+    DateController,
   },
 })
 export default class WebFoto extends Vue {
@@ -46,6 +46,14 @@ export default class WebFoto extends Vue {
     return this.currentImageDate ? `${this.apiUrl}/${this.name}/${this.name}_${this.currentImageDate.toISOString()}.jpg` : null;
   }
 
+  get isLastDate(): boolean {
+    if (this.currentImageDate === null) {
+      return false;
+    }
+
+    return +this.currentImageDate === +this.images[this.images.length - 1];
+  }
+
   /* METHODS */
 
   goToLastImage(): void {
@@ -56,9 +64,9 @@ export default class WebFoto extends Vue {
 
   async mounted(): Promise<void> {
     this.images = await getImages(this.apiUrl, this.name);
-    this.goToLastImage();
+    this.currentImageDate = this.images[0];
+    // this.goToLastImage();
   }
-
 }
 </script>
 
@@ -66,14 +74,22 @@ export default class WebFoto extends Vue {
 .web-foto {
   position: relative;
 
-  .cover {
-    width: 100%;
-    height: 100%;
+  .image-displayer {
+    position: relative;
   }
-  .layer {
+
+  .loading-spinner {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .controllers {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -100%);
   }
 }
 </style>
