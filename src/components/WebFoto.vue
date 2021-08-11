@@ -54,7 +54,7 @@ export default class WebFoto extends Vue {
   /* GETTERS */
 
   get currentImageDate(): dayjs.Dayjs | null {
-    return this.currentImageIndex ? this.images[this.currentImageIndex] : null;
+    return this.currentImageIndex !== null ? this.images[this.currentImageIndex] : null;
   }
 
   get currentImagePath(): string | null {
@@ -75,7 +75,7 @@ export default class WebFoto extends Vue {
   }
 
   incrementImage(extent: Extent): void {
-    if (this.currentImageIndex && this.currentImageDate) {
+    if (typeof this.currentImageIndex === 'number' && this.currentImageDate) {
       const lastDate = this.lastDate as dayjs.Dayjs;
 
       let targetDate = this.currentImageDate.add(1, extent);
@@ -84,14 +84,14 @@ export default class WebFoto extends Vue {
       }
 
       let index = this.currentImageIndex;
-      while (this.images[index].isBefore(targetDate) && index < this.images.length) {
+      while (this.images[index].isBefore(targetDate) && index < this.images.length - 1) {
         index++;
       }
       this.currentImageIndex = index;
     }
   }
   decrementImage(extent: Extent): void {
-    if (this.currentImageIndex && this.currentImageDate) {
+    if (typeof this.currentImageIndex === 'number' && this.currentImageDate) {
       const firstDate = this.firstDate as dayjs.Dayjs;
 
       let targetDate = this.currentImageDate.subtract(1, extent);

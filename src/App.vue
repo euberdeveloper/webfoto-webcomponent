@@ -1,5 +1,5 @@
 <template>
-  <web-foto class="web-foto" apiUrl="http://localhost:3000" name="hotelcampagnola" />
+  <web-foto class="web-foto" api-url="http://localhost:3000" name="cortevalier" />
 </template>
 
 <script lang="ts">
