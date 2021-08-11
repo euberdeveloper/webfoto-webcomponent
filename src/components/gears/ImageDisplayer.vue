@@ -123,9 +123,7 @@ export default class ImageDisplayer extends Vue {
     visibility: hidden;
   }
 }
-</style>
 
-<style lang="scss">
 .image-leave-active {
   transition: opacity 1s;
 }

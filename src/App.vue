@@ -1,5 +1,5 @@
 <template>
-  <web-foto class="web-foto" api-url="http://localhost:3000" name="cortevalier" />
+  <web-foto class="web-foto" api-url="http://localhost:3000" name="cortevalier" width="100%" />
 </template>
 
 <script lang="ts">
@@ -16,9 +16,9 @@ export default class App extends Vue {
 }
 </script>
 
+
 <style lang="scss" scoped>
 .web-foto {
-  width: 50%;
+  margin: 25px;
 }
 </style>
-

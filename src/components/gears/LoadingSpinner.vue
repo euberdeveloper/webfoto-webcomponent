@@ -1,18 +1,16 @@
 <template>
-  <div class="loading-spinner">
-    <grid-loader class="spinner" :color="color" :loading="show" />
-  </div>
+  <grid-loader class="spinner" :color="color" :loading="show" />
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-import GridLoader from 'vue-spinner/src/GridLoader.vue';
+import GridLoader from "vue-spinner/src/GridLoader.vue";
 
 @Component({
   components: {
-    GridLoader
-  }
+    GridLoader,
+  },
 })
 export default class LoadingSpinner extends Vue {
   /* PROPS */
@@ -24,12 +22,3 @@ export default class LoadingSpinner extends Vue {
   show?: boolean;
 }
 </script>
-
-<style lang="scss" scoped>
-.loading-spinner {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-</style>

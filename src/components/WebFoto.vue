@@ -1,8 +1,8 @@
 <template>
-  <div class="web-foto">
+  <div class="web-foto" :style="widthStyle" @mouseenter="showActions = true" @mouseleave="showActions = false">
     <image-displayer class="image-displayer" :image="currentImagePath" :loading.sync="loadingImage" v-if="currentImagePath" />
     <loading-spinner class="loading-spinner" :color="spinnerColor" :show="loadingImage" />
-    <date-controller
+    <controllers
       class="controllers"
       :value="currentImageDate"
       :dates="images"
@@ -11,18 +11,21 @@
       @current="goToLastImage"
       v-if="currentImageDate"
     />
+    <actions class="actions" :showActions="showActions" :textCopied="textCopied" @share="share" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import dayjs from "dayjs";
+import clipboardCopy from "clipboard-copy";
 
 import { getImages } from "@/utils/api";
 
 import ImageDisplayer from "@/components/gears/ImageDisplayer.vue";
 import LoadingSpinner from "@/components/gears/LoadingSpinner.vue";
-import DateController from "@/components/gears/Controllers.vue";
+import Controllers from "@/components/gears/Controllers.vue";
+import Actions from "@/components/gears/Actions.vue";
 
 type Extent = "year" | "month" | "day" | "hours" | "minutes";
 
@@ -30,7 +33,8 @@ type Extent = "year" | "month" | "day" | "hours" | "minutes";
   components: {
     ImageDisplayer,
     LoadingSpinner,
-    DateController,
+    Controllers,
+    Actions,
   },
 })
 export default class WebFoto extends Vue {
@@ -38,6 +42,9 @@ export default class WebFoto extends Vue {
 
   @Prop({ type: String, required: true })
   name!: string;
+
+  @Prop({ type: String, default: "100%" })
+  width!: string;
 
   @Prop({ type: String, required: true })
   apiUrl!: string;
@@ -50,6 +57,8 @@ export default class WebFoto extends Vue {
   private images: dayjs.Dayjs[] = [];
   private currentImageIndex: number | null = null;
   private loadingImage = false;
+  private showActions = false;
+  private textCopied = false;
 
   /* GETTERS */
 
@@ -68,6 +77,10 @@ export default class WebFoto extends Vue {
     return this.images.length ? this.images[0] : null;
   }
 
+  get widthStyle(): { width: string } {
+    return { width: this.width };
+  }
+
   /* METHODS */
 
   goToLastImage(): void {
@@ -75,7 +88,7 @@ export default class WebFoto extends Vue {
   }
 
   incrementImage(extent: Extent): void {
-    if (typeof this.currentImageIndex === 'number' && this.currentImageDate) {
+    if (typeof this.currentImageIndex === "number" && this.currentImageDate) {
       const lastDate = this.lastDate as dayjs.Dayjs;
 
       let targetDate = this.currentImageDate.add(1, extent);
@@ -91,7 +104,7 @@ export default class WebFoto extends Vue {
     }
   }
   decrementImage(extent: Extent): void {
-    if (typeof this.currentImageIndex === 'number' && this.currentImageDate) {
+    if (typeof this.currentImageIndex === "number" && this.currentImageDate) {
       const firstDate = this.firstDate as dayjs.Dayjs;
 
       let targetDate = this.currentImageDate.subtract(1, extent);
@@ -105,6 +118,12 @@ export default class WebFoto extends Vue {
       }
       this.currentImageIndex = index;
     }
+  }
+
+  share(): void {
+    clipboardCopy(this.currentImagePath ?? '');
+    this.textCopied = true;
+    setTimeout(() => this.textCopied = false, 2000);
   }
 
   /* LIFE CYCLE */
@@ -136,6 +155,13 @@ export default class WebFoto extends Vue {
     top: 100%;
     left: 50%;
     transform: translate(-50%, -100%);
+  }
+
+  .actions {
+    position: absolute;
+    top: 30%;
+    left: 0;
+    transform: translate(0, -30%);
   }
 }
 </style>
