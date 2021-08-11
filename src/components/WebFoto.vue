@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import * as dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 import { getImages } from "@/utils/api";
 
@@ -47,13 +47,13 @@ export default class WebFoto extends Vue {
 
   /* DATA */
 
-  private images: Date[] = [];
+  private images: dayjs.Dayjs[] = [];
   private currentImageIndex: number | null = null;
   private loadingImage = false;
 
   /* GETTERS */
 
-  get currentImageDate(): Date | null {
+  get currentImageDate(): dayjs.Dayjs | null {
     return this.currentImageIndex ? this.images[this.currentImageIndex] : null;
   }
 
@@ -61,22 +61,14 @@ export default class WebFoto extends Vue {
     return this.currentImageDate ? `${this.apiUrl}/${this.name}/${this.name}_${this.currentImageDate.toISOString()}.jpg` : null;
   }
 
-  /* METHODS */
-
-  private extentToMillis(extent: Extent): number {
-    switch (extent) {
-      case "year":
-        return 31536000000;
-      case "month":
-        return 2592000000;
-      case "day":
-        return 86400000;
-      case "hours":
-        return 3600000;
-      case "minutes":
-        return 60000;
-    }
+  get lastDate(): dayjs.Dayjs | null {
+    return this.images.length ? this.images[this.images.length - 1] : null;
   }
+  get firstDate(): dayjs.Dayjs | null {
+    return this.images.length ? this.images[0] : null;
+  }
+
+  /* METHODS */
 
   goToLastImage(): void {
     this.currentImageIndex = this.images.length - 1;
@@ -84,37 +76,41 @@ export default class WebFoto extends Vue {
 
   incrementImage(extent: Extent): void {
     if (this.currentImageIndex && this.currentImageDate) {
-      const targetDate = new Date(+this.currentImageDate + this.extentToMillis(extent));
+      const lastDate = this.lastDate as dayjs.Dayjs;
+
+      let targetDate = this.currentImageDate.add(1, extent);
+      if (targetDate.isAfter(lastDate)) {
+        targetDate = lastDate;
+      }
 
       let index = this.currentImageIndex;
-      while (this.images[index] < targetDate && index < this.images.length) {
+      while (this.images[index].isBefore(targetDate) && index < this.images.length) {
         index++;
       }
-
-      if (this.images[index]) {
-        this.currentImageIndex = index;
-      }
+      this.currentImageIndex = index;
     }
   }
   decrementImage(extent: Extent): void {
     if (this.currentImageIndex && this.currentImageDate) {
-      const targetDate = new Date(+this.currentImageDate - this.extentToMillis(extent));
+      const firstDate = this.firstDate as dayjs.Dayjs;
+
+      let targetDate = this.currentImageDate.subtract(1, extent);
+      if (targetDate.isBefore(firstDate)) {
+        targetDate = firstDate;
+      }
 
       let index = this.currentImageIndex;
-      while (this.images[index] > targetDate && index > 0) {
+      while (this.images[index].isAfter(targetDate) && index > 0) {
         index--;
       }
-
-      if (this.images[index]) {
-        this.currentImageIndex = index;
-      }
+      this.currentImageIndex = index;
     }
   }
 
   /* LIFE CYCLE */
 
   async mounted(): Promise<void> {
-    this.images = await getImages(this.apiUrl, this.name);
+    this.images = (await getImages(this.apiUrl, this.name)).map((date) => dayjs(date));
     this.goToLastImage();
   }
 }
