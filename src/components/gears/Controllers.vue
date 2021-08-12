@@ -3,52 +3,9 @@
     <div class="triangle" :style="arrowStyle" />
 
     <div class="time-lapse" v-if="showTimeLapse">
-      <incrementor
-        class="incrementor"
-        :text="day"
-        :disabledIncrement="isLastDay"
-        :disabledDecrement="isFirstDay"
-        @increment="$emit('increment', 'day')"
-        @decrement="$emit('decrement', 'day')"
-      />
-      <span class="text">/</span>
-      <incrementor
-        class="incrementor"
-        :text="month"
-        :disabledIncrement="isLastMonth"
-        :disabledDecrement="isFirstMonth"
-        @increment="$emit('increment', 'month')"
-        @decrement="$emit('decrement', 'month')"
-      />
-      <span class="text">/</span>
-      <incrementor
-        class="incrementor"
-        :text="year"
-        :disabledIncrement="isLastYear"
-        :disabledDecrement="isFirstYear"
-        @increment="$emit('increment', 'year')"
-        @decrement="$emit('decrement', 'year')"
-      />
-      <span class="divider" />
-      <incrementor
-        class="incrementor"
-        :text="hours"
-        :disabledIncrement="isLastHour"
-        :disabledDecrement="isFirstHour"
-        @increment="$emit('increment', 'hours')"
-        @decrement="$emit('decrement', 'hours')"
-      />
-      <span class="text">:</span>
-      <incrementor
-        class="incrementor"
-        :text="minutes"
-        :disabledIncrement="isLastMinute"
-        :disabledDecrement="isFirstMinute"
-        @increment="$emit('increment', 'minutes')"
-        @decrement="$emit('decrement', 'minutes')"
-      />
-      <span class="divider" />
-      <button class="clickable" :disabled="isLastDate" @click="$emit('current')">Current</button>
+      <button class="clickable" :disabled="timeLapseVelocity === null" @click="$emit('pause')">Pause</button>
+      <button class="clickable" :disabled="timeLapseVelocity === 'normal'" @click="$emit('play', 'normal')">Play</button>
+      <button class="clickable" :disabled="timeLapseVelocity === 'fast'" @click="$emit('play', 'fast')">Play fast</button>
     </div>
 
     <div class="controller">
@@ -124,6 +81,9 @@ export default class Controllers extends Vue {
 
   @Prop({ type: Boolean, default: false })
   showTimeLapse!: boolean;
+
+  @Prop({ validator: v => v === null || typeof v === 'string', default: null })
+  timeLapseVelocity!: string | null;
 
   /* GETTERS AND SETTERS */
 

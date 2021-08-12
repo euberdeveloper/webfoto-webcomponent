@@ -7,9 +7,12 @@
       :value="currentImageDate"
       :dates="images"
       :showTimeLapse="showTimeLapse"
+      :timeLapseVelocity="timeLapseVelocity"
       @increment="incrementImage($event)"
       @decrement="decrementImage($event)"
       @current="goToLastImage"
+      @pause="timeLapseVelocity = null"
+      @play="timeLapseVelocity = $event"
       v-if="currentImageDate"
     />
     <actions
@@ -24,18 +27,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import dayjs from "dayjs";
 import clipboardCopy from "clipboard-copy";
 
+import { Extent, PlayVelocity } from "@/types";
 import { getImages } from "@/utils/api";
 
 import ImageDisplayer from "@/components/gears/ImageDisplayer.vue";
 import LoadingSpinner from "@/components/gears/LoadingSpinner.vue";
 import Controllers from "@/components/gears/Controllers.vue";
 import Actions from "@/components/gears/Actions.vue";
-
-type Extent = "year" | "month" | "day" | "hours" | "minutes";
 
 @Component({
   components: {
@@ -68,6 +70,8 @@ export default class WebFoto extends Vue {
   private showActions = false;
   private textCopied = false;
   private showTimeLapse = false;
+  private timeLapseVelocity: PlayVelocity | null = null;
+  private timeLapseinterval: any | null = null;
 
   /* GETTERS */
 
@@ -133,6 +137,24 @@ export default class WebFoto extends Vue {
     clipboardCopy(this.currentImagePath ?? "");
     this.textCopied = true;
     setTimeout(() => (this.textCopied = false), 2000);
+  }
+
+  /* WATCHERS */
+
+  @Watch("timeLapseVelocity")
+  watchTimeLapseVelocity(): void {
+    if (this.timeLapseinterval) {
+      clearInterval(this.timeLapseinterval);
+    }
+    
+    switch (this.timeLapseVelocity) {
+      case "normal":
+        this.timeLapseinterval = setInterval(() => this.incrementImage('minutes'), 2000);
+        break;
+      case "fast":
+        this.timeLapseinterval = setInterval(() => this.incrementImage('minutes'), 1000);
+        break;
+    }
   }
 
   /* LIFE CYCLE */
