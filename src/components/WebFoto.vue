@@ -7,9 +7,11 @@
       :value="currentImageDate"
       :dates="images"
       :showTimeLapse="showTimeLapse"
-      :timeLapseVelocity="timeLapseVelocity"
-      @increment="incrementImage($event)"
-      @decrement="decrementImage($event)"
+      :timeLapseVelocity.sync="timeLapseVelocity"
+      :timeLapseQuantity.sync="timeLapseQuantity"
+      :timeLapseExtent.sync="timeLapseExtent"
+      @increment="updateImage($event, 1)"
+      @decrement="updateImage($event, -1)"
       @current="goToLastImage"
       @pause="timeLapseVelocity = null"
       @play="timeLapseVelocity = $event"
@@ -71,7 +73,9 @@ export default class WebFoto extends Vue {
   private textCopied = false;
   private showTimeLapse = false;
   private timeLapseVelocity: PlayVelocity | null = null;
-  private timeLapseinterval: any | null = null;
+  private timeLapseinterval: number | null = null;
+  private timeLapseQuantity = 1;
+  private timeLapseExtent: Extent = "hours";
 
   /* GETTERS */
 
@@ -100,27 +104,27 @@ export default class WebFoto extends Vue {
     this.currentImageIndex = this.images.length - 1;
   }
 
-  incrementImage(extent: Extent): void {
+  private incrementImage(extent: Extent, quantity = 0): void {
     if (typeof this.currentImageIndex === "number" && this.currentImageDate) {
       const lastDate = this.lastDate as dayjs.Dayjs;
 
-      let targetDate = this.currentImageDate.add(1, extent);
+      let targetDate = this.currentImageDate.add(quantity, extent);
       if (targetDate.isAfter(lastDate)) {
         targetDate = lastDate;
       }
 
       let index = this.currentImageIndex;
-      while (this.images[index].isBefore(targetDate) && index < this.images.length - 1) {
+      while (this.images[index].isBefore(targetDate) && index < this.images.length - quantity) {
         index++;
       }
       this.currentImageIndex = index;
     }
   }
-  decrementImage(extent: Extent): void {
+  private decrementImage(extent: Extent, quantity = 0): void {
     if (typeof this.currentImageIndex === "number" && this.currentImageDate) {
       const firstDate = this.firstDate as dayjs.Dayjs;
 
-      let targetDate = this.currentImageDate.subtract(1, extent);
+      let targetDate = this.currentImageDate.subtract(quantity, extent);
       if (targetDate.isBefore(firstDate)) {
         targetDate = firstDate;
       }
@@ -130,6 +134,14 @@ export default class WebFoto extends Vue {
         index--;
       }
       this.currentImageIndex = index;
+    }
+  }
+
+  updateImage(extent: Extent, quantity = 0): void {
+    if (quantity > 0) {
+      this.incrementImage(extent, quantity);
+    } else if (quantity < 0) {
+      this.decrementImage(extent, -quantity);
     }
   }
 
@@ -146,20 +158,24 @@ export default class WebFoto extends Vue {
     if (this.timeLapseinterval) {
       clearInterval(this.timeLapseinterval);
     }
-    
+
     switch (this.timeLapseVelocity) {
       case "normal":
-        this.timeLapseinterval = setInterval(() => this.incrementImage('minutes'), 2000);
+        this.timeLapseinterval = setInterval(() => this.updateImage(this.timeLapseExtent, this.timeLapseQuantity), 2000);
         break;
       case "fast":
-        this.timeLapseinterval = setInterval(() => this.incrementImage('minutes'), 1000);
+        this.timeLapseinterval = setInterval(() => this.updateImage(this.timeLapseExtent, this.timeLapseQuantity), 1000);
         break;
     }
   }
 
-  @Watch("currentImageDate")
-  watchCurrentImageDate(): void {
-    if (this.currentImageDate?.isSame(this.lastDate)) {
+  @Watch("showTimeLapse")
+  watchShowTimeLapse(): void {
+    if (this.timeLapseinterval) {
+      clearInterval(this.timeLapseinterval);
+    }
+
+    if (!this.showTimeLapse) {
       this.timeLapseVelocity = null;
     }
   }

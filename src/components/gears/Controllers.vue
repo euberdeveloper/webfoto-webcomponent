@@ -2,16 +2,18 @@
   <div class="controllers">
     <div class="triangle" :style="arrowStyle" />
 
-    <div class="time-lapse" v-if="showTimeLapse">
-      <controller-button icon="pause" :disabled="timeLapseVelocity === null" @click="$emit('pause')" />
-      <controller-button icon="play" :disabled="timeLapseVelocity === 'normal' || isLastDate" @click="$emit('play', 'normal')" />
-      <controller-button icon="fast-play" :disabled="timeLapseVelocity === 'fast' || isLastDate" @click="$emit('play', 'fast')" />
-      <div style="flex: 1" />
-      <input type="number" placeholder="extent" />
-      <select>
-        <option>minute</option>
-      </select>
-    </div>
+    <transition name="fade">
+      <div class="time-lapse" v-if="showTimeLapse">
+        <controller-button class="button" icon="pause" :disabled="pauseDisabled" @click="$emit('pause')" />
+        <controller-button class="button" icon="play" :disabled="playNormalDisabled" @click="$emit('play', 'normal')" />
+        <controller-button class="button" icon="fast-play" :disabled="playFastDisabled" @click="$emit('play', 'fast')" />
+        <div style="flex: 1" />
+        <span class="divider" />
+        <div style="flex: 1" />
+        <input-text class="quantity" type="number" placeholder="N" v-model="internalTimeLapseQuantity" />
+        <input-select class="extent" placeholder="Misura" :options="extentOptions" v-model="internalTimeLapseExtent" />
+      </div>
+    </transition>
 
     <div class="controller">
       <incrementor
@@ -65,16 +67,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import dayjs from "dayjs";
 
-import Incrementor from "./Incrementor.vue";
-import ControllerButton from "./ControllerButton.vue";
+import { Extent, SelectOption } from "@/types";
+
+import Incrementor from "@/components/shared/Incrementor.vue";
+import ControllerButton from "@/components/shared/ControllerButton.vue";
+import InputText from "@/components/shared/InputText.vue";
+import InputSelect from "@/components/shared/InputSelect.vue";
 
 @Component({
   components: {
     Incrementor,
     ControllerButton,
+    InputText,
+    InputSelect,
   },
 })
 export default class Controllers extends Vue {
@@ -92,6 +100,37 @@ export default class Controllers extends Vue {
   @Prop({ validator: (v) => v === null || typeof v === "string", default: null })
   timeLapseVelocity!: string | null;
 
+  @Prop({ type: Number, required: true })
+  timeLapseQuantity!: number;
+
+  @Prop({ validator: (v) => v === null || typeof v === "string", required: true })
+  timeLapseExtent!: Extent;
+
+  /* DATA */
+
+  private extentOptions: SelectOption<Extent>[] = [
+    {
+      label: "minuti",
+      value: "minutes",
+    },
+    {
+      label: "ore",
+      value: "hours",
+    },
+    {
+      label: "giorni",
+      value: "day",
+    },
+    {
+      label: "mesi",
+      value: "month",
+    },
+    {
+      label: "anni",
+      value: "year",
+    },
+  ];
+
   /* GETTERS AND SETTERS */
 
   get internalValue(): dayjs.Dayjs {
@@ -99,6 +138,27 @@ export default class Controllers extends Vue {
   }
   set internalValue(value: dayjs.Dayjs) {
     this.$emit("update:value", value);
+  }
+
+  get internalTimeLapseVelocity(): string | null {
+    return this.timeLapseVelocity;
+  }
+  set internalTimeLapseVelocity(value: string | null) {
+    this.$emit("update:timeLapseVelocity", value);
+  }
+
+  get internalTimeLapseQuantity(): number {
+    return this.timeLapseQuantity;
+  }
+  set internalTimeLapseQuantity(value: number) {
+    this.$emit("update:timeLapseQuantity", +value);
+  }
+
+  get internalTimeLapseExtent(): Extent {
+    return this.timeLapseExtent;
+  }
+  set internalTimeLapseExtent(value: Extent) {
+    this.$emit("update:timeLapseExtent", value);
   }
 
   get day(): string {
@@ -130,6 +190,13 @@ export default class Controllers extends Vue {
     }
 
     return this.internalValue.isSame(this.lastDate);
+  }
+  get isFirstDate(): boolean {
+    if (this.internalValue === null) {
+      return false;
+    }
+
+    return this.internalValue.isSame(this.firstDate);
   }
 
   get isLastYear(): boolean {
@@ -205,6 +272,28 @@ export default class Controllers extends Vue {
       borderBottom: this.showTimeLapse ? "#c1092580" : "#1d1d1c80",
     };
   }
+
+  get pauseDisabled(): boolean {
+    return this.timeLapseVelocity === null;
+  }
+  get playDisabled(): boolean {
+    return (this.timeLapseQuantity > 0 && this.isLastDate)|| (this.timeLapseQuantity < 0 && this.isFirstDate) || this.timeLapseQuantity === 0;
+  }
+  get playNormalDisabled(): boolean {
+    return this.timeLapseVelocity === 'normal' || this.playDisabled;
+  }
+  get playFastDisabled(): boolean {
+    return this.timeLapseVelocity === 'fast' || this.playDisabled;
+  }
+
+  /* WATCHERS */
+
+  @Watch("playDisabled")
+  watchPlayDisabled(): void {
+    if (this.playDisabled) {
+      this.internalTimeLapseVelocity = null;
+    }
+  }
 }
 </script>
 
@@ -255,6 +344,14 @@ export default class Controllers extends Vue {
     color: white;
 
     background-color: #c1092580;
+
+    > .quantity {
+      width: 40px;
+    }
+
+    > .extent {
+      margin-left: 8px;
+    }
   }
 
   .incrementor {
@@ -272,5 +369,18 @@ export default class Controllers extends Vue {
     margin: 0 1px;
     color: #c4c5c5;
   }
+
+  .button {
+    margin: 0 2px;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 500ms;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

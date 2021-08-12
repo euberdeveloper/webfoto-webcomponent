@@ -39,8 +39,6 @@ export default class ActionButton extends Vue {
       background: this.hovered || this.active ? this.color : "#1d1d1c80",
     };
   }
-
- 
 }
 </script>
 

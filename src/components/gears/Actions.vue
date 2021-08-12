@@ -10,7 +10,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-import ActionButton from "./ActionButton.vue";
+import ActionButton from "@/components/shared/ActionButton.vue";
 
 @Component({
   components: {
