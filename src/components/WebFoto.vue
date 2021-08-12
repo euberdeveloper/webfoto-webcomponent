@@ -157,6 +157,13 @@ export default class WebFoto extends Vue {
     }
   }
 
+  @Watch("currentImageDate")
+  watchCurrentImageDate(): void {
+    if (this.currentImageDate?.isSame(this.lastDate)) {
+      this.timeLapseVelocity = null;
+    }
+  }
+
   /* LIFE CYCLE */
 
   async mounted(): Promise<void> {

@@ -3,9 +3,14 @@
     <div class="triangle" :style="arrowStyle" />
 
     <div class="time-lapse" v-if="showTimeLapse">
-      <button class="clickable" :disabled="timeLapseVelocity === null" @click="$emit('pause')">Pause</button>
-      <button class="clickable" :disabled="timeLapseVelocity === 'normal'" @click="$emit('play', 'normal')">Play</button>
-      <button class="clickable" :disabled="timeLapseVelocity === 'fast'" @click="$emit('play', 'fast')">Play fast</button>
+      <controller-button icon="pause" :disabled="timeLapseVelocity === null" @click="$emit('pause')" />
+      <controller-button icon="play" :disabled="timeLapseVelocity === 'normal' || isLastDate" @click="$emit('play', 'normal')" />
+      <controller-button icon="fast-play" :disabled="timeLapseVelocity === 'fast' || isLastDate" @click="$emit('play', 'fast')" />
+      <div style="flex: 1" />
+      <input type="number" placeholder="extent" />
+      <select>
+        <option>minute</option>
+      </select>
     </div>
 
     <div class="controller">
@@ -54,7 +59,7 @@
         @decrement="$emit('decrement', 'minutes')"
       />
       <span class="divider" />
-      <button class="clickable" :disabled="isLastDate" @click="$emit('current')">Current</button>
+      <controller-button text="Current" :disabled="isLastDate" @click="$emit('current')" />
     </div>
   </div>
 </template>
@@ -64,10 +69,12 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import dayjs from "dayjs";
 
 import Incrementor from "./Incrementor.vue";
+import ControllerButton from "./ControllerButton.vue";
 
 @Component({
   components: {
     Incrementor,
+    ControllerButton,
   },
 })
 export default class Controllers extends Vue {
@@ -82,7 +89,7 @@ export default class Controllers extends Vue {
   @Prop({ type: Boolean, default: false })
   showTimeLapse!: boolean;
 
-  @Prop({ validator: v => v === null || typeof v === 'string', default: null })
+  @Prop({ validator: (v) => v === null || typeof v === "string", default: null })
   timeLapseVelocity!: string | null;
 
   /* GETTERS AND SETTERS */
@@ -264,26 +271,6 @@ export default class Controllers extends Vue {
   .text {
     margin: 0 1px;
     color: #c4c5c5;
-  }
-
-  .clickable {
-    margin: 0 2px;
-    padding: 0;
-    border: 0;
-
-    background-color: transparent;
-    color: white;
-    cursor: pointer;
-
-    &:hover {
-      color: red;
-    }
-    &:active {
-      color: #ad0000;
-    }
-    &:disabled {
-      color: #9a9ea1;
-    }
   }
 }
 </style>
