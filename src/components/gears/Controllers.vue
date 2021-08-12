@@ -1,6 +1,56 @@
 <template>
   <div class="controllers">
-    <div class="triangle" />
+    <div class="triangle" :style="arrowStyle" />
+
+    <div class="time-lapse" v-if="showTimeLapse">
+      <incrementor
+        class="incrementor"
+        :text="day"
+        :disabledIncrement="isLastDay"
+        :disabledDecrement="isFirstDay"
+        @increment="$emit('increment', 'day')"
+        @decrement="$emit('decrement', 'day')"
+      />
+      <span class="text">/</span>
+      <incrementor
+        class="incrementor"
+        :text="month"
+        :disabledIncrement="isLastMonth"
+        :disabledDecrement="isFirstMonth"
+        @increment="$emit('increment', 'month')"
+        @decrement="$emit('decrement', 'month')"
+      />
+      <span class="text">/</span>
+      <incrementor
+        class="incrementor"
+        :text="year"
+        :disabledIncrement="isLastYear"
+        :disabledDecrement="isFirstYear"
+        @increment="$emit('increment', 'year')"
+        @decrement="$emit('decrement', 'year')"
+      />
+      <span class="divider" />
+      <incrementor
+        class="incrementor"
+        :text="hours"
+        :disabledIncrement="isLastHour"
+        :disabledDecrement="isFirstHour"
+        @increment="$emit('increment', 'hours')"
+        @decrement="$emit('decrement', 'hours')"
+      />
+      <span class="text">:</span>
+      <incrementor
+        class="incrementor"
+        :text="minutes"
+        :disabledIncrement="isLastMinute"
+        :disabledDecrement="isFirstMinute"
+        @increment="$emit('increment', 'minutes')"
+        @decrement="$emit('decrement', 'minutes')"
+      />
+      <span class="divider" />
+      <button class="clickable" :disabled="isLastDate" @click="$emit('current')">Current</button>
+    </div>
+
     <div class="controller">
       <incrementor
         class="incrementor"
@@ -71,6 +121,9 @@ export default class Controllers extends Vue {
 
   @Prop({ type: Array, required: true })
   dates!: dayjs.Dayjs[];
+
+  @Prop({ type: Boolean, default: false })
+  showTimeLapse!: boolean;
 
   /* GETTERS AND SETTERS */
 
@@ -178,14 +231,19 @@ export default class Controllers extends Vue {
     }
     return this.isFirstHour && this.internalValue.get("minute") === this.firstDate.get("minute");
   }
+
+  get arrowStyle(): { borderTop: string; borderBottom: string } {
+    return {
+      borderTop: this.showTimeLapse ? "#c1092580" : "#1d1d1c80",
+      borderBottom: this.showTimeLapse ? "#c1092580" : "#1d1d1c80",
+    };
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .controllers {
   position: relative;
-  background: #1d1d1c80;
-  height: 50px;
 
   .triangle {
     position: absolute;
@@ -203,8 +261,22 @@ export default class Controllers extends Vue {
 
   .controller {
     padding: 0 12px;
+    height: 50px;
 
-    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    font-family: "Exo 2 Medium", sans-serif;
+    font-size: 14px;
+    color: white;
+    background: #1d1d1c80;
+  }
+
+  .time-lapse {
+    padding: 0 12px;
+    height: 50px;
 
     display: flex;
     flex-direction: row;
@@ -215,40 +287,42 @@ export default class Controllers extends Vue {
     font-size: 14px;
     color: white;
 
-    .incrementor {
-      margin: 0 2px;
+    background-color: #c1092580;
+  }
+
+  .incrementor {
+    margin: 0 2px;
+  }
+
+  .divider {
+    height: 80%;
+    width: 1px;
+    background-color: #9a9ea1;
+    margin: 0 10px;
+  }
+
+  .text {
+    margin: 0 1px;
+    color: #c4c5c5;
+  }
+
+  .clickable {
+    margin: 0 2px;
+    padding: 0;
+    border: 0;
+
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+
+    &:hover {
+      color: red;
     }
-
-    .divider {
-      height: 80%;
-      width: 1px;
-      background-color: #9a9ea1;
-      margin: 0 10px;
+    &:active {
+      color: #ad0000;
     }
-
-    .text {
-      margin: 0 1px;
-      color: #c4c5c5;
-    }
-
-    .clickable {
-      margin: 0 2px;
-      padding: 0;
-      border: 0;
-
-      background-color: transparent;
-      color: white;
-      cursor: pointer;
-
-      &:hover {
-        color: red;
-      }
-      &:active {
-        color: #ad0000;
-      }
-      &:disabled {
-        color: #9a9ea1;
-      }
+    &:disabled {
+      color: #9a9ea1;
     }
   }
 }

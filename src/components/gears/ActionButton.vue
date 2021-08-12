@@ -1,5 +1,5 @@
 <template>
-  <button class="action-button" :style="backgroundStyle" @mouseenter="hovered = true" @mouseleave="hovered = false" @click="$emit('click', $event)">
+  <button class="action-button" :style="buttonStyle" @mouseenter="hovered = true" @mouseleave="hovered = false" @click="$emit('click', $event)">
     <img class="icon" :src="iconSrc" />
     <span class="text">{{ text }}</span>
   </button>
@@ -21,6 +21,9 @@ export default class ActionButton extends Vue {
   @Prop({ type: String, default: "red" })
   color!: string;
 
+  @Prop({ type: Boolean, default: false })
+  active!: boolean;
+
   /* DATA */
 
   private hovered = false;
@@ -31,11 +34,13 @@ export default class ActionButton extends Vue {
     return require(`@/assets/${this.icon}.svg`);
   }
 
-  get backgroundStyle(): { background: string } {
+  get buttonStyle(): { background: string } {
     return {
-      background: this.hovered ? this.color : "#1d1d1c80",
+      background: this.hovered || this.active ? this.color : "#1d1d1c80",
     };
   }
+
+ 
 }
 </script>
 

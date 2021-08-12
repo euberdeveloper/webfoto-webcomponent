@@ -6,12 +6,20 @@
       class="controllers"
       :value="currentImageDate"
       :dates="images"
+      :showTimeLapse="showTimeLapse"
       @increment="incrementImage($event)"
       @decrement="decrementImage($event)"
       @current="goToLastImage"
       v-if="currentImageDate"
     />
-    <actions class="actions" :showActions="showActions" :textCopied="textCopied" @share="share" />
+    <actions
+      class="actions"
+      :showActions="showActions"
+      :textCopied="textCopied"
+      :showTimeLapse="showTimeLapse"
+      @share="share"
+      @timelapse="showTimeLapse = !showTimeLapse"
+    />
   </div>
 </template>
 
@@ -59,6 +67,7 @@ export default class WebFoto extends Vue {
   private loadingImage = false;
   private showActions = false;
   private textCopied = false;
+  private showTimeLapse = false;
 
   /* GETTERS */
 
@@ -121,9 +130,9 @@ export default class WebFoto extends Vue {
   }
 
   share(): void {
-    clipboardCopy(this.currentImagePath ?? '');
+    clipboardCopy(this.currentImagePath ?? "");
     this.textCopied = true;
-    setTimeout(() => this.textCopied = false, 2000);
+    setTimeout(() => (this.textCopied = false), 2000);
   }
 
   /* LIFE CYCLE */

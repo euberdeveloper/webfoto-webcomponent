@@ -1,8 +1,8 @@
 <template>
   <div class="actions">
     <transition-group name="actions" tag="div">
-      <action-button class="button" icon="share" :text="shareText" :color="shareColor" key="share" @click="$emit('share')" v-if="showActions" />
-      <action-button class="button" icon="update" text="Time lapse" key="time-lapse" @click="$emit('time-lapse')" v-if="showActions" />
+      <action-button class="button" icon="share" :text="shareText" :color="shareColor" :active="textCopied" key="share" @click="$emit('share')" v-if="showActions" />
+      <action-button class="button" icon="update" text="Time lapse" key="time-lapse" :active="showTimeLapse" @click="$emit('timelapse')" v-if="showActions" />
     </transition-group>
   </div>
 </template>
@@ -26,13 +26,16 @@ export default class Actions extends Vue {
   @Prop({ type: Boolean, default: true })
   textCopied!: boolean;
 
+  @Prop({ type: Boolean, default: false })
+  showTimeLapse!: boolean;
+
   /* GETTERS */
 
   get shareColor(): string | undefined {
-    return this.textCopied ? 'green' : undefined;
+    return this.textCopied ? "green" : undefined;
   }
   get shareText(): string {
-    return this.textCopied ? 'Copiato!' : 'Condividi';
+    return this.textCopied ? "Copiato!" : "Condividi";
   }
 }
 </script>
@@ -53,6 +56,6 @@ export default class Actions extends Vue {
 .actions-enter,
 .actions-leave-to {
   opacity: 0;
-  margin-left: -15px!important;
+  margin-left: -15px !important;
 }
 </style>
