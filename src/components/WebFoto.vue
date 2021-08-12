@@ -146,7 +146,8 @@ export default class WebFoto extends Vue {
   }
 
   share(): void {
-    clipboardCopy(this.currentImagePath ?? "");
+    const textToCopy = this.currentImagePath || '';
+    clipboardCopy(textToCopy);
     this.textCopied = true;
     setTimeout(() => (this.textCopied = false), 2000);
   }
