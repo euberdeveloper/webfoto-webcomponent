@@ -1,6 +1,6 @@
 <template>
-  <div class="web-foto" :style="widthStyle" @mouseenter="showActions = true" @mouseleave="showActions = false">
-    <image-displayer class="image-displayer" :image="currentImagePath" :loading.sync="loadingImage" v-if="currentImagePath" />
+  <div class="web-foto" :style="sizeStyle" @mouseenter="showActions = true" @mouseleave="showActions = false">
+    <image-displayer class="image-displayer" :image="currentImagePath" :stretchWidth="width !== 'auto'" :stretchHeight="height !== 'auto'" :loading.sync="loadingImage" v-if="currentImagePath" />
     <loading-spinner class="loading-spinner" :color="spinnerColor" :show="loadingImage" />
     <controllers
       class="controllers"
@@ -55,8 +55,11 @@ export default class WebFoto extends Vue {
   @Prop({ type: String, required: true })
   name!: string;
 
-  @Prop({ type: String, default: "100%" })
+  @Prop({ type: String, default: 'auto' })
   width!: string;
+
+  @Prop({ type: String, default: 'auto' })
+  height!: string;
 
   @Prop({ type: String, required: true })
   apiUrl!: string;
@@ -94,8 +97,11 @@ export default class WebFoto extends Vue {
     return this.images.length ? this.images[0] : null;
   }
 
-  get widthStyle(): { width: string } {
-    return { width: this.width };
+  get sizeStyle(): { width: string; height: string } {
+    return {
+      width: this.width,
+      height: this.height
+    };
   }
 
   /* METHODS */
@@ -146,7 +152,7 @@ export default class WebFoto extends Vue {
   }
 
   share(): void {
-    const textToCopy = this.currentImagePath || '';
+    const textToCopy = this.currentImagePath || "";
     clipboardCopy(textToCopy);
     this.textCopied = true;
     setTimeout(() => (this.textCopied = false), 2000);
@@ -193,6 +199,7 @@ export default class WebFoto extends Vue {
 <style lang="scss" scoped>
 .web-foto {
   position: relative;
+  display: inline-block;
 
   .image-displayer {
     position: relative;

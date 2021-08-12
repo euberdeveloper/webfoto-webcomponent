@@ -1,12 +1,14 @@
 <template>
-  <div class="image-displayer" @click="$emit('click')">
+  <div :style="sizeStyle" class="image-displayer" @click="$emit('click')">
     <transition name="image">
-      <img ref="testa" class="image" v-show="activeImageIndex === 0" key="testa" @click="$emit('click')" />
+      <img :style="sizeStyle" ref="testa" class="image" v-show="activeImageIndex === 0" key="testa" @click="$emit('click')" />
     </transition>
     <transition name="image">
-      <img ref="croce" class="image" v-show="activeImageIndex === 1" key="croce" @click="$emit('click')" />
+      <img :style="sizeStyle" ref="croce" class="image" v-show="activeImageIndex === 1" key="croce" @click="$emit('click')" />
     </transition>
-    <img ref="ghost" class="ghost" />
+    <div :style="sizeStyle" class="ghost-container">
+      <img :style="sizeStyle" ref="ghost" class="ghost" />
+    </div>
   </div>
 </template>
 
@@ -24,6 +26,12 @@ export default class ImageDisplayer extends Vue {
 
   @Prop({ type: Boolean, required: true })
   loading!: boolean;
+
+  @Prop({ type: Boolean, required: true })
+  stretchWidth!: boolean;
+
+  @Prop({ type: Boolean, required: true })
+  stretchHeight!: boolean;
 
   /* REFS */
 
@@ -57,6 +65,13 @@ export default class ImageDisplayer extends Vue {
   }
   get oldImage(): HTMLImageElement {
     return this.imagesElements[(this.activeImageIndex + 1) % 2];
+  }
+
+  get sizeStyle(): { width: string; height: string } {
+    return {
+      width: this.stretchWidth ? '100%' : 'auto',
+      height: this.stretchHeight ? '100%' : 'auto'
+    };
   }
 
   /* METHODS */
@@ -114,13 +129,15 @@ export default class ImageDisplayer extends Vue {
     left: 0;
 
     display: block;
-    width: 100%;
   }
 
-  .ghost {
-    display: block;
-    width: 100%;
-    visibility: hidden;
+  .ghost-container {
+    position: relative;
+
+    .ghost {
+      display: block;
+      visibility: hidden;
+    }
   }
 }
 
