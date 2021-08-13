@@ -19,6 +19,6 @@ export default class LoadingSpinner extends Vue {
   color?: string;
 
   @Prop({ type: Boolean, required: true })
-  show?: boolean;
+  show!: boolean;
 }
 </script>

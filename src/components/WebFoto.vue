@@ -25,6 +25,13 @@
       @share="share"
       @timelapse="showTimeLapse = !showTimeLapse"
     />
+    <brand-logo 
+      class="brand-logo"
+      :src="logoSrc"
+      :href="logoHref"
+      :width="logoWidth"
+      v-if="logoSrc"
+    />
   </div>
 </template>
 
@@ -40,6 +47,7 @@ import ImageDisplayer from "@/components/gears/ImageDisplayer.vue";
 import LoadingSpinner from "@/components/gears/LoadingSpinner.vue";
 import Controllers from "@/components/gears/Controllers.vue";
 import Actions from "@/components/gears/Actions.vue";
+import BrandLogo from "@/components/gears/BrandLogo.vue";
 
 @Component({
   components: {
@@ -47,6 +55,7 @@ import Actions from "@/components/gears/Actions.vue";
     LoadingSpinner,
     Controllers,
     Actions,
+    BrandLogo
   },
 })
 export default class WebFoto extends Vue {
@@ -66,6 +75,15 @@ export default class WebFoto extends Vue {
 
   @Prop({ type: String, required: false })
   spinnerColor?: string;
+
+  @Prop({ type: String, required: false })
+  logoSrc?: string;
+
+  @Prop({ type: String, required: false })
+  logoHref?: string;
+
+  @Prop({ type: String, required: false })
+  logoWidth?: string;
 
   /* DATA */
 
@@ -223,6 +241,13 @@ export default class WebFoto extends Vue {
     position: absolute;
     top: 30%;
     right: 0;
+    transform: translate(0, -30%);
+  }
+
+  .brand-logo {
+    position: absolute;
+    top: 30%;
+    left: 0;
     transform: translate(0, -30%);
   }
 }

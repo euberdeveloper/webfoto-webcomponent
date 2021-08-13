@@ -1,5 +1,5 @@
 <template>
-  <web-foto class="web-foto" api-url="http://localhost:3000" name="cortevalier" width="100%" height="100%" />
+  <web-foto class="web-foto" api-url="http://localhost:3000" name="cortevalier" width="100%" height="100%" logo-src="https://it.addicted-sports.com/fileadmin/bw/LakeGarda-KiteandSurfSchool.png" logo-href="http://www.google.it" />
 </template>
 
 <script lang="ts">
