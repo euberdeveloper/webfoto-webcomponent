@@ -1,12 +1,13 @@
 <template>
   <button class="action-button" :style="buttonStyle" @mouseenter="hovered = true" @mouseleave="hovered = false" @click="$emit('click', $event)">
     <img class="icon" :src="iconSrc" />
-    <span class="text">{{ text }}</span>
+    <span class="text" :style="textStyle">{{ text }}</span>
   </button>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { Direction } from "@/types";
 
 @Component
 export default class ActionButton extends Vue {
@@ -24,6 +25,9 @@ export default class ActionButton extends Vue {
   @Prop({ type: Boolean, default: false })
   active!: boolean;
 
+  @Prop({ type: String, default: "right" })
+  direction!: Direction;
+
   /* DATA */
 
   private hovered = false;
@@ -37,6 +41,12 @@ export default class ActionButton extends Vue {
   get buttonStyle(): { background: string } {
     return {
       background: this.hovered || this.active ? this.color : "#1d1d1c80",
+    };
+  }
+
+  get textStyle(): { order: number } {
+    return {
+      order: this.direction === "left" ? 1 : -1,
     };
   }
 }

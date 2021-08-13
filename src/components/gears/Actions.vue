@@ -1,6 +1,6 @@
 <template>
   <div class="actions">
-    <transition-group name="actions" tag="div">
+    <transition-group name="actions" tag="div" class="container">
       <action-button class="button" icon="share" :text="shareText" :color="shareColor" :active="textCopied" key="share" @click="$emit('share')" v-if="showActions" />
       <action-button class="button" icon="update" text="Time lapse" key="time-lapse" :active="showTimeLapse" @click="$emit('timelapse')" v-if="showActions" />
     </transition-group>
@@ -42,7 +42,14 @@ export default class Actions extends Vue {
 
 <style lang="scss" scoped>
 .actions {
-  margin-left: 15px;
+  margin-right: 15px;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
 
   .button {
     margin: 5px 0;
@@ -56,6 +63,6 @@ export default class Actions extends Vue {
 .actions-enter,
 .actions-leave-to {
   opacity: 0;
-  margin-left: -15px !important;
+  margin-right: -15px !important;
 }
 </style>

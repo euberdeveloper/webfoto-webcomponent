@@ -222,16 +222,9 @@ export default class WebFoto extends Vue {
   .actions {
     position: absolute;
     top: 30%;
-    left: 0;
+    right: 0;
     transform: translate(0, -30%);
   }
-}
-</style>
-
-<style lang="scss">
-* {
-  margin: 0;
-  padding: 0;
 }
 </style>
 
