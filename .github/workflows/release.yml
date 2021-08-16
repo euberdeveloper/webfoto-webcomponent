@@ -44,6 +44,7 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ steps.package-version.outputs.current-version}}"
-          title: "Webcomponent dist"
+          prerelease: false
+          title: "Deploy webcomponent"
           files: |
             dist.tar.gz
