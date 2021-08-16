@@ -27,7 +27,9 @@ jobs:
         run: npm run build
         
       - name: Add release
-        uses: softprops/action-gh-release@v1
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
+          automatic_release_tag: "latest"
+          title: "Webcomponent dist"
           files: |
             dist/**
