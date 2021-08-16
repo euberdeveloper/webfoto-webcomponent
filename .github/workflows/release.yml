@@ -31,7 +31,6 @@ jobs:
         id: compress
         with:
           command: c
-          cwd: .
           files: |
             ./dist
           outPath: dist.tar.gz
