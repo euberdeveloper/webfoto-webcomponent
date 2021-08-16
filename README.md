@@ -26,6 +26,7 @@ The web component just needs that its script is included in the header (or in th
 The properties of the web component are:
 * __name__: It is mandatory and it is the name of the hotel (must match the one in the webfoto-api)
 * __api-url__: It is mandatory and it must point to the root of the webfoto-api.
+* __images-url__: It is mandatory and it must point to the url of the static directory containing the served images.
 * __width__: The default is `auto` and sets the width of the web component. Note that if only **width** or **height** is specified, the one that is not specified is set so that the image is not warped.
 * __height__: The default is `auto` and sets the width of the web component. Note that if only **width** or **height** is specified, the one that is not specified is set so that the image is not warped.
 * __spinner-color__: The default is `green` and it sets the color of the spinner displayed during images fetching.
@@ -36,7 +37,7 @@ The properties of the web component are:
 ### Example:
 
 ```html
-<web-foto name="myhotel" api-url="https://api.mywebfoto.it/api" width="50%"></web-foto>
+<web-foto name="myhotel" api-url="https://api.mywebfoto.it/api" images-url="https://api.mywebfoto.it/albums" width="50%"></web-foto>
 ```
 
 ## How was it made

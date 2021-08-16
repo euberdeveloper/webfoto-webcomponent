@@ -73,6 +73,9 @@ export default class WebFoto extends Vue {
   @Prop({ type: String, required: true })
   apiUrl!: string;
 
+  @Prop({ type: String, required: true })
+  imagesUrl!: string;
+
   @Prop({ type: String, required: false })
   spinnerColor?: string;
 
@@ -105,7 +108,7 @@ export default class WebFoto extends Vue {
   }
 
   get currentImagePath(): string | null {
-    return this.currentImageDate ? `${this.apiUrl}/${this.name}/${this.name}_${this.currentImageDate.toISOString()}.jpg` : null;
+    return this.currentImageDate ? `${this.imagesUrl}/${this.name}/${this.currentImageDate.toISOString().slice(0, -5)}.jpg` : null;
   }
 
   get lastDate(): dayjs.Dayjs | null {
