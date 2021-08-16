@@ -2,6 +2,8 @@
 
 This is the webcomponent of the project "Webfoto".
 
+https://user-images.githubusercontent.com/33126163/129527900-d0bcbfe7-8fcf-4743-a627-e141fa412e94.mp4
+
 ## The project
 
 The "Webfoto" project's purpose is to put some cameras, that take a photo every a certain amount of time, in some hotels, so that a web component can show the timeline of the view of that hotel in the hotel's website.
