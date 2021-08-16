@@ -27,7 +27,7 @@ jobs:
         run: npm run build
         
       - name: Add release
-      - uses: "marvinpinto/action-automatic-releases@latest"
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           automatic_release_tag: "latest"
           title: "Webcomponent dist"
