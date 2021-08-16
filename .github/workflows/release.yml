@@ -2,19 +2,19 @@ name: release
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [15.x]
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -22,10 +22,10 @@ jobs:
 
       - name: Install node dependencies
         run: npm install
-        
+
       - name: Build webcomponent
         run: npm run build
-        
+
       - name: Compress dist
         uses: master-atul/tar-action@v1.0.2
         id: compress
@@ -34,16 +34,16 @@ jobs:
           files: |
             ./dist
           outPath: dist.tar.gz
-          
-      - name: Get package.json version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
-        
+
+      - name: Get version of the project
+        id: project-version
+        uses: "euberdeveloper/ga-project-version@main"
+
       - name: Add release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ steps.package-version.outputs.current-version}}"
+          automatic_release_tag: "${{ steps.project-version.outputs.version }}"
           prerelease: false
           title: "Deploy webcomponent"
           files: |
