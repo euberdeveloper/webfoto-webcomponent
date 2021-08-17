@@ -61,4 +61,17 @@ The structure of the code is the same of a Vue.js site, but the `build` script i
 
 1. Execute `npm run build`
 2. The `dist` folder with the webcomponent is created
+
+### Automatic deploy
+
+The deploy is actually automatically handled through a **github action**.
+
+The github action:
+1. Starts an ubuntu docker container
+2. Adds nodejs
+3. Installs the dependencies
+4. Builds the webcomponent
+5. Compresses the webcomponent
+6. Gets the package.json version
+7. Pulishes a new release with that version and with the compressed webcomponent
  
