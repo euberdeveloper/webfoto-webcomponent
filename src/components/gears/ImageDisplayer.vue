@@ -33,6 +33,9 @@ export default class ImageDisplayer extends Vue {
   @Prop({ type: Boolean, required: true })
   stretchHeight!: boolean;
 
+  @Prop({ type: Number, required: true })
+  minZindex!: number;
+
   /* REFS */
 
   @Ref()
@@ -93,8 +96,8 @@ export default class ImageDisplayer extends Vue {
 
   private prepareImageSwap(newImageUrl: string): void {
     this.oldImage.src = newImageUrl;
-    this.oldImage.style.zIndex = "-1";
-    this.currentImage.style.zIndex = "0";
+    this.oldImage.style.zIndex = `${this.minZindex}`;
+    this.currentImage.style.zIndex = `${this.minZindex + 1}`;
     this.ghost.src = newImageUrl;
   }
 

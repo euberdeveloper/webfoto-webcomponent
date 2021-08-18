@@ -33,6 +33,8 @@ The properties of the web component are:
 * __logo-src__: The default is `undefined` and it sets the image of the displayed hotel's logo. If not set, no logo is displayed.
 * __logo-href__: The default is `undefined` and it sets the link of the displayed logo. If not set, the logo is not a link.
 * __logo-width__: The default is `150px` and it sets the width of the displayed logo.
+* __logo-width-mobile__: The default is `70px` and it sets the width of the displayed logo on mobile displays.
+* __min-zindex__: The default is `-1` and is used to fix a problem that was faced about the z-index property. To swap the image, it usually sets `z-index: -1` to the displayed one ant `z-index: 0` to the image that will fade. By setting `min-zindex: x`, the displayed image will have `z-index: x` while the faded image (and all the controls) will have `z-index: x + 1`.
 
 ### Example:
 

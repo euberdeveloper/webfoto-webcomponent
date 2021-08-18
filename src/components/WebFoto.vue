@@ -1,9 +1,19 @@
 <template>
   <div class="web-foto" :style="sizeStyle" @mouseenter="showActions = true" @mouseleave="showActions = false">
-    <image-displayer class="image-displayer" :image="currentImagePath" :stretchWidth="width !== 'auto'" :stretchHeight="height !== 'auto'" :loading.sync="loadingImage" v-if="currentImagePath" />
-    <loading-spinner class="loading-spinner" :color="spinnerColor" :show="loadingImage" />
+    <image-displayer
+      class="image-displayer"
+      :style="zIndexStyle"
+      :minZindex="minZindex"
+      :image="currentImagePath"
+      :stretchWidth="width !== 'auto'"
+      :stretchHeight="height !== 'auto'"
+      :loading.sync="loadingImage"
+      v-if="currentImagePath"
+    />
+    <loading-spinner class="loading-spinner" :style="zIndexStyle" :color="spinnerColor" :show="loadingImage" />
     <controllers
       class="controllers"
+      :style="zIndexStyle"
       :value="currentImageDate"
       :dates="images"
       :showTimeLapse="showTimeLapse"
@@ -19,20 +29,14 @@
     />
     <actions
       class="actions"
+      :style="zIndexStyle"
       :showActions="showActions"
       :textCopied="textCopied"
       :showTimeLapse="showTimeLapse"
       @share="share"
       @timelapse="showTimeLapse = !showTimeLapse"
     />
-    <brand-logo 
-      class="brand-logo"
-      :src="logoSrc"
-      :href="logoHref"
-      :width="logoWidth"
-      :widthMobile="logoWidthMobile"
-      v-if="logoSrc"
-    />
+    <brand-logo class="brand-logo" :style="zIndexStyle" :src="logoSrc" :href="logoHref" :width="logoWidth" :widthMobile="logoWidthMobile" v-if="logoSrc" />
   </div>
 </template>
 
@@ -56,7 +60,7 @@ import BrandLogo from "@/components/gears/BrandLogo.vue";
     LoadingSpinner,
     Controllers,
     Actions,
-    BrandLogo
+    BrandLogo,
   },
 })
 export default class WebFoto extends Vue {
@@ -65,10 +69,10 @@ export default class WebFoto extends Vue {
   @Prop({ type: String, required: true })
   name!: string;
 
-  @Prop({ type: String, default: 'auto' })
+  @Prop({ type: String, default: "auto" })
   width!: string;
 
-  @Prop({ type: String, default: 'auto' })
+  @Prop({ type: String, default: "auto" })
   height!: string;
 
   @Prop({ type: String, required: true })
@@ -87,10 +91,13 @@ export default class WebFoto extends Vue {
   logoHref?: string;
 
   @Prop({ type: String, default: "150px" })
-  logoWidth?: string;
+  logoWidth!: string;
 
   @Prop({ type: String, default: "70px" })
-  logoWidthMobile?: string;
+  logoWidthMobile!: string;
+
+  @Prop({ type: Number, default: -1 })
+  minZindex!: number;
 
   /* DATA */
 
@@ -125,7 +132,13 @@ export default class WebFoto extends Vue {
   get sizeStyle(): { width: string; height: string } {
     return {
       width: this.width,
-      height: this.height
+      height: this.height,
+    };
+  }
+
+  get zIndexStyle(): { zIndex: number } {
+    return {
+      zIndex: this.minZindex + 1,
     };
   }
 
