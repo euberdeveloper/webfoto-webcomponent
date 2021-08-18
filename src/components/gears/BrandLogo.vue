@@ -1,16 +1,23 @@
 <template>
-  <div class="brand-logo" :style="divStyle">
-    <a class="cover" :href="href" v-if="href">
-      <img class="image cover" :src="src" alt="logo" />
-    </a>
-    <img class="image cover" :src="src" alt="logo" v-else />
-  </div>
+  <match-media query="(max-width: 720px)" v-slot="{ matches }">
+    <div class="brand-logo" :style="getDivStyle(matches)">
+      <a class="cover" :href="href" v-if="href">
+        <img class="image cover" :src="src" alt="logo" />
+      </a>
+      <img class="image cover" :src="src" alt="logo" v-else />
+    </div>
+  </match-media>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { MatchMedia } from "vue-component-media-queries";
 
-@Component
+@Component({
+  components: {
+    MatchMedia,
+  },
+})
 export default class BrandLogo extends Vue {
   /* PROPS */
 
@@ -20,13 +27,16 @@ export default class BrandLogo extends Vue {
   @Prop({ type: String, required: true })
   href!: string;
 
-  @Prop({ type: String, default: "150px" })
+  @Prop({ type: String, required: true })
   width!: string;
 
-  /* GETTERS */
+  @Prop({ type: String, required: true })
+  widthMobile!: string;
 
-  get divStyle(): { width: string } {
-    return { width: this.width };
+  /* METHODS */
+
+  public getDivStyle(mobile: boolean): { width: string } {
+    return { width: mobile ? this.widthMobile : this.width };
   }
 }
 </script>
@@ -47,6 +57,12 @@ export default class BrandLogo extends Vue {
     &:hover {
       opacity: 1;
     }
+  }
+}
+
+@media only screen and (max-width: 720px) {
+  body {
+    background-color: lightblue;
   }
 }
 </style>

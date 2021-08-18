@@ -30,6 +30,7 @@
       :src="logoSrc"
       :href="logoHref"
       :width="logoWidth"
+      :widthMobile="logoWidthMobile"
       v-if="logoSrc"
     />
   </div>
@@ -85,8 +86,11 @@ export default class WebFoto extends Vue {
   @Prop({ type: String, required: false })
   logoHref?: string;
 
-  @Prop({ type: String, required: false })
+  @Prop({ type: String, default: "150px" })
   logoWidth?: string;
+
+  @Prop({ type: String, default: "70px" })
+  logoWidthMobile?: string;
 
   /* DATA */
 
