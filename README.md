@@ -81,3 +81,13 @@ The github action:
 
 Every automatic deploy creates a **[new release](https://github.com/Dev-digitalgarda/webfoto-webcomponent/releases)**. In that release, there is attached a compressed (.tar.gz) file containing the static assets that are to be **staticaly served as they are**.
  
+### How should I contribute
+
+Whoever will contribute and work on this code:
+
+1. Should install locally **nodejs**
+2. Clone the project and checkout on the **dev branch**
+3. Know how to work with a **Vue.js** project
+4. Test locally the changes with **npm run serve**
+5. Push the code **on dev**
+6. Only when you want a new release to be published, you should **update the version in package.json and merge the dev branch into main**
