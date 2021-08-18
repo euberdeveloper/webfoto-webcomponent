@@ -79,5 +79,5 @@ The github action:
 
 ### Were are the static files that I just have to serve?
 
-Every automatic deploy creates a **[new release}(https://github.com/Dev-digitalgarda/webfoto-webcomponent/releases)**. In that release, there is attached a compressed (.tar.gz) file containing the static assets that are to be **staticaly served as they are**.
+Every automatic deploy creates a **[new release](https://github.com/Dev-digitalgarda/webfoto-webcomponent/releases)**. In that release, there is attached a compressed (.tar.gz) file containing the static assets that are to be **staticaly served as they are**.
  
