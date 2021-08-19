@@ -29,13 +29,22 @@ export default class DateController extends Vue {
 </script>
 
 <style lang="scss" scoped>
+$arrow-size: 5px;
+$arrow-size-mobile: 7px;
+
 @mixin arrow($disabled: false) {
   width: 0;
   height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
+  border-left: $arrow-size solid transparent;
+  border-right: $arrow-size solid transparent;
   position: absolute;
-  left: -5px;
+  left: -$arrow-size;
+
+  @media screen and (max-width: 720px) {
+    border-left-width: $arrow-size-mobile;
+    border-right-width: $arrow-size-mobile;
+    left: -$arrow-size-mobile;
+  }
 
   &:hover {
     border-bottom-color: red;
@@ -72,22 +81,32 @@ export default class DateController extends Vue {
 
     .arrow-up {
       @include arrow();
-      border-bottom: 5px solid white;
-      bottom: 3px;
+      border-bottom: $arrow-size solid white;
+      bottom: #{$arrow-size - 2px};
+
+      @media screen and (max-width: 720px) {
+        border-bottom-width: $arrow-size-mobile;
+        bottom: #{$arrow-size-mobile - 1px};
+      }
     }
     .arrow-down {
       @include arrow();
-      border-top: 5px solid white;
-      top: 3.5px;
+      border-top: $arrow-size solid white;
+      top: #{$arrow-size - 1px};
+
+      @media screen and (max-width: 720px) {
+        border-top-width: $arrow-size-mobile;
+        top: #{$arrow-size-mobile - 0px};
+      }
     }
 
     &:disabled {
-      .arrow-up, .arrow-down {
+      .arrow-up,
+      .arrow-down {
         @include arrow(true);
       }
     }
   }
-  
 
   .text {
     text-align: center;

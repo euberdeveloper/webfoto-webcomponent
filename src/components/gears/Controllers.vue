@@ -277,13 +277,13 @@ export default class Controllers extends Vue {
     return this.timeLapseVelocity === null;
   }
   get playDisabled(): boolean {
-    return (this.timeLapseQuantity > 0 && this.isLastDate)|| (this.timeLapseQuantity < 0 && this.isFirstDate) || this.timeLapseQuantity === 0;
+    return (this.timeLapseQuantity > 0 && this.isLastDate) || (this.timeLapseQuantity < 0 && this.isFirstDate) || this.timeLapseQuantity === 0;
   }
   get playNormalDisabled(): boolean {
-    return this.timeLapseVelocity === 'normal' || this.playDisabled;
+    return this.timeLapseVelocity === "normal" || this.playDisabled;
   }
   get playFastDisabled(): boolean {
-    return this.timeLapseVelocity === 'fast' || this.playDisabled;
+    return this.timeLapseVelocity === "fast" || this.playDisabled;
   }
 
   /* WATCHERS */
@@ -372,6 +372,18 @@ export default class Controllers extends Vue {
 
   .button {
     margin: 0 2px;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .controllers {
+    .controller {
+      height: 64px;
+    }
+
+    .time-lapse {
+      height: 64px;
+    }
   }
 }
 
