@@ -64,7 +64,7 @@ The structure of the code is the same of a Vue.js site, but the `build` script i
 1. Execute `npm run build`
 2. The `dist` folder with the webcomponent is created
 
-### Automatic deploy
+## Automatic deploy
 
 The deploy is actually automatically handled through a **github action**.
 
@@ -76,4 +76,18 @@ The github action:
 5. Compresses the webcomponent
 6. Gets the package.json version
 7. Pulishes a new release with that version and with the compressed webcomponent
+
+## Were are the static files that I just have to serve?
+
+Every automatic deploy creates a **[new release](https://github.com/Dev-digitalgarda/webfoto-webcomponent/releases)**. In that release, there is attached a compressed (.tar.gz) file containing the static assets that are to be **staticaly served as they are**.
  
+## How should I contribute
+
+Whoever will contribute and work on this code:
+
+1. Should install locally **nodejs**
+2. Clone the project and checkout on the **dev branch**
+3. Know how to work with a **Vue.js** project
+4. Test locally the changes with **npm run serve**
+5. Push the code **on dev**
+6. Only when you want a new release to be published, you should **update the version in package.json and merge the dev branch into main**
