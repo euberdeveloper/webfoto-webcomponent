@@ -42,11 +42,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import dayjs from "dayjs";
 import clipboardCopy from "clipboard-copy";
+
+import dayjs from "dayjs";
 
 import { Extent, PlayVelocity } from "@/types";
 import { getImages } from "@/utils/api";
+import setDayjsLocale from '@/utils/dayjsLocale';
 
 import ImageDisplayer from "@/components/gears/ImageDisplayer.vue";
 import LoadingSpinner from "@/components/gears/LoadingSpinner.vue";
@@ -226,6 +228,10 @@ export default class WebFoto extends Vue {
   }
 
   /* LIFE CYCLE */
+
+  created(): void {
+    setDayjsLocale();
+  }
 
   async mounted(): Promise<void> {
     this.images = (await getImages(this.apiUrl, this.name)).map((date) => dayjs(date));
