@@ -44,7 +44,6 @@ export default class BrandLogo extends Vue {
 <style lang="scss" scoped>
 .brand-logo {
   display: inline-block;
-  position: relative;
 
   .cover {
     width: 100%;

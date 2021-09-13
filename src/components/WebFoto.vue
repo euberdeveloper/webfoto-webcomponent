@@ -17,9 +17,12 @@
       :value="currentImageDate"
       :dates="images"
       :showTimeLapse="showTimeLapse"
+      :legacyTimeLapse="legacyTimeLapse"
+      :timeLapseMaxItems="timeLapseMaxItems"
       :timeLapseVelocity.sync="timeLapseVelocity"
       :timeLapseQuantity.sync="timeLapseQuantity"
       :timeLapseExtent.sync="timeLapseExtent"
+      @slider="sliderChanged($event)"
       @increment="updateImage($event, 1)"
       @decrement="updateImage($event, -1)"
       @current="goToLastImage"
@@ -100,6 +103,12 @@ export default class WebFoto extends Vue {
 
   @Prop({ type: Number, default: -1 })
   minZindex!: number;
+
+  @Prop({ type: Boolean, default: false })
+  legacyTimeLapse!: boolean;
+
+  @Prop({ type: Number, default: 200 })
+  timeLapseMaxItems!: number;
 
   /* DATA */
 
@@ -196,6 +205,10 @@ export default class WebFoto extends Vue {
     clipboardCopy(textToCopy);
     this.textCopied = true;
     setTimeout(() => (this.textCopied = false), 2000);
+  }
+
+  sliderChanged(index: number): void {
+    this.currentImageIndex = index;
   }
 
   /* WATCHERS */

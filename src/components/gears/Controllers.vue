@@ -1,9 +1,9 @@
 <template>
-  <div class="controllers">
+  <div class="controllers" :class="{ 'full-width': showTimeLapse && !legacyTimeLapse }">
     <div class="triangle" :style="arrowStyle" />
 
     <transition name="fade">
-      <div class="time-lapse" v-if="showTimeLapse">
+      <div class="time-lapse-legacy controller-block" v-if="showTimeLapse && legacyTimeLapse">
         <controller-button class="button" icon="pause" :disabled="pauseDisabled" @click="$emit('pause')" />
         <controller-button class="button" icon="play" :disabled="playNormalDisabled" @click="$emit('play', 'normal')" />
         <controller-button class="button" icon="fast-play" :disabled="playFastDisabled" @click="$emit('play', 'fast')" />
@@ -15,7 +15,11 @@
       </div>
     </transition>
 
-    <div class="controller">
+    <div class="time-lapse controller-block" v-if="showTimeLapse && !legacyTimeLapse">
+      <vue-slider class="slider" v-model="wrapperSliderValue" :tooltipPlacement="sliderTooltipPlacement" :data="sliderData" hideLabel contained lazy />
+    </div>
+
+    <div class="controller controller-block" v-if="legacyTimeLapse || !showTimeLapse">
       <incrementor
         class="incrementor"
         :text="day"
@@ -94,10 +98,16 @@ export default class Controllers extends Vue {
   @Prop({ type: Array, required: true })
   dates!: dayjs.Dayjs[];
 
-  @Prop({ type: Boolean, default: false })
+  @Prop({ type: Boolean, required: true })
   showTimeLapse!: boolean;
 
-  @Prop({ validator: (v) => v === null || typeof v === "string", default: null })
+  @Prop({ type: Boolean, required: true })
+  legacyTimeLapse!: boolean;
+
+  @Prop({ type: Number, required: true })
+  timeLapseMaxItems!: number;
+
+  @Prop({ validator: (v) => v === null || typeof v === "string", required: true })
   timeLapseVelocity!: string | null;
 
   @Prop({ type: Number, required: true })
@@ -107,6 +117,8 @@ export default class Controllers extends Vue {
   timeLapseExtent!: Extent;
 
   /* DATA */
+
+  private sliderValue = 0;
 
   private extentOptions: SelectOption<Extent>[] = [
     {
@@ -159,6 +171,30 @@ export default class Controllers extends Vue {
   }
   set internalTimeLapseExtent(value: Extent) {
     this.$emit("update:timeLapseExtent", value);
+  }
+
+  get sliderOneEvery(): number {
+    return this.dates.length > this.timeLapseMaxItems ? Math.floor(this.dates.length / this.timeLapseMaxItems) : 1;
+  }
+
+  get sliderTooltipPlacement(): string {
+    if (this.sliderValue === 0) {
+      return 'right';
+    }
+    else if (this.sliderValue === this.sliderData.length - 1) {
+      return 'left';
+    }
+    else {
+      return 'top';
+    }
+  }
+
+  get wrapperSliderValue(): number {
+    return this.sliderValue;
+  }
+  set wrapperSliderValue(value: number) {
+    this.sliderValue = value;
+    this.$emit("slider", value * this.sliderOneEvery);
   }
 
   get day(): string {
@@ -286,6 +322,15 @@ export default class Controllers extends Vue {
     return this.timeLapseVelocity === "fast" || this.playDisabled;
   }
 
+  get sliderData(): { label: string; value: number }[] {
+    const dates = this.sliderOneEvery <= 1 ? this.dates : this.dates.filter((_el, index) => index % this.sliderOneEvery === 0);
+
+    return dates.map((date, index) => ({
+      label: date.format("DD/MM/YYYY HH:mm"),
+      value: index
+    }));
+  }
+
   /* WATCHERS */
 
   @Watch("playDisabled")
@@ -299,8 +344,6 @@ export default class Controllers extends Vue {
 
 <style lang="scss" scoped>
 .controllers {
-  position: relative;
-
   .triangle {
     position: absolute;
     margin-left: auto;
@@ -315,7 +358,7 @@ export default class Controllers extends Vue {
     width: 0;
   }
 
-  .controller {
+  .controller-block {
     padding: 0 12px;
     height: 50px;
 
@@ -327,22 +370,22 @@ export default class Controllers extends Vue {
     font-family: "Exo 2 Medium", sans-serif;
     font-size: 14px;
     color: white;
-    background: #1d1d1c80;
+  }
+
+  .controller {
+    background-color: #1d1d1c80;
   }
 
   .time-lapse {
-    padding: 0 12px;
-    height: 50px;
+    background-color: #1d1d1c80;
+    // overflow-x: hidden;
 
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
+    > .slider {
+      flex: 1;
+    }
+  }
 
-    font-family: "Exo 2 Medium", sans-serif;
-    font-size: 14px;
-    color: white;
-
+  .time-lapse-legacy {
     background-color: #c1092580;
 
     > .quantity {
@@ -377,14 +420,14 @@ export default class Controllers extends Vue {
 
 @media screen and (max-width: 720px) {
   .controllers {
-    .controller {
-      height: 64px;
-    }
-
-    .time-lapse {
+    .controller-block {
       height: 64px;
     }
   }
+}
+
+.full-width {
+  width: 100%;
 }
 
 .fade-enter-active,
