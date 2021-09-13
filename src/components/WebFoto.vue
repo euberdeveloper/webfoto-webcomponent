@@ -22,6 +22,7 @@
       :timeLapseVelocity.sync="timeLapseVelocity"
       :timeLapseQuantity.sync="timeLapseQuantity"
       :timeLapseExtent.sync="timeLapseExtent"
+      :currentImageIndex.sync="currentImageIndex"
       @slider="sliderChanged($event)"
       @increment="updateImage($event, 1)"
       @decrement="updateImage($event, -1)"
@@ -29,6 +30,15 @@
       @pause="timeLapseVelocity = null"
       @play="timeLapseVelocity = $event"
       v-if="currentImageDate"
+    />
+    <time-lapse
+      class="time-lapse"
+      :style="zIndexStyle"
+      :dates="images"
+      :timeLapseMaxItems="timeLapseMaxItems"
+      :currentImageIndex.sync="currentImageIndex"
+      @slider="sliderChanged($event)"
+      v-if="currentImageDate && showTimeLapse && !legacyTimeLapse"
     />
     <actions
       class="actions"
@@ -56,6 +66,7 @@ import setDayjsLocale from '@/utils/dayjsLocale';
 import ImageDisplayer from "@/components/gears/ImageDisplayer.vue";
 import LoadingSpinner from "@/components/gears/LoadingSpinner.vue";
 import Controllers from "@/components/gears/Controllers.vue";
+import TimeLapse from "@/components/gears/TimeLapse.vue";
 import Actions from "@/components/gears/Actions.vue";
 import BrandLogo from "@/components/gears/BrandLogo.vue";
 
@@ -64,6 +75,7 @@ import BrandLogo from "@/components/gears/BrandLogo.vue";
     ImageDisplayer,
     LoadingSpinner,
     Controllers,
+    TimeLapse,
     Actions,
     BrandLogo,
   },
@@ -120,7 +132,7 @@ export default class WebFoto extends Vue {
   private showTimeLapse = false;
   private timeLapseVelocity: PlayVelocity | null = null;
   private timeLapseinterval: number | null = null;
-  private timeLapseQuantity = 1;
+  private timeLapseQuantity = -1;
   private timeLapseExtent: Extent = "hours";
 
   /* GETTERS */
@@ -270,6 +282,13 @@ export default class WebFoto extends Vue {
   }
 
   .controllers {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+  }
+
+  .time-lapse {
     position: absolute;
     top: 100%;
     left: 50%;
