@@ -15,10 +15,6 @@
       </div>
     </transition>
 
-    <div class="time-lapse controller-block" v-if="showTimeLapse && !legacyTimeLapse">
-      <vue-slider class="slider" v-model="wrapperSliderValue" :tooltipPlacement="sliderTooltipPlacement" :data="sliderData" hideLabel contained lazy />
-    </div>
-
     <div class="controller controller-block" v-if="legacyTimeLapse || !showTimeLapse">
       <incrementor
         class="incrementor"
@@ -104,9 +100,6 @@ export default class Controllers extends Vue {
   @Prop({ type: Boolean, required: true })
   legacyTimeLapse!: boolean;
 
-  @Prop({ type: Number, required: true })
-  timeLapseMaxItems!: number;
-
   @Prop({ validator: (v) => v === null || typeof v === "string", required: true })
   timeLapseVelocity!: string | null;
 
@@ -117,8 +110,6 @@ export default class Controllers extends Vue {
   timeLapseExtent!: Extent;
 
   /* DATA */
-
-  private sliderValue = 0;
 
   private extentOptions: SelectOption<Extent>[] = [
     {
@@ -145,13 +136,6 @@ export default class Controllers extends Vue {
 
   /* GETTERS AND SETTERS */
 
-  get internalValue(): dayjs.Dayjs {
-    return this.value;
-  }
-  set internalValue(value: dayjs.Dayjs) {
-    this.$emit("update:value", value);
-  }
-
   get internalTimeLapseVelocity(): string | null {
     return this.timeLapseVelocity;
   }
@@ -173,44 +157,20 @@ export default class Controllers extends Vue {
     this.$emit("update:timeLapseExtent", value);
   }
 
-  get sliderOneEvery(): number {
-    return this.dates.length > this.timeLapseMaxItems ? Math.floor(this.dates.length / this.timeLapseMaxItems) : 1;
-  }
-
-  get sliderTooltipPlacement(): string {
-    if (this.sliderValue === 0) {
-      return 'right';
-    }
-    else if (this.sliderValue === this.sliderData.length - 1) {
-      return 'left';
-    }
-    else {
-      return 'top';
-    }
-  }
-
-  get wrapperSliderValue(): number {
-    return this.sliderValue;
-  }
-  set wrapperSliderValue(value: number) {
-    this.sliderValue = value;
-    this.$emit("slider", value * this.sliderOneEvery);
-  }
-
   get day(): string {
-    return this.internalValue.format("ddd DD");
+    return this.value.format("ddd DD");
   }
   get month(): string {
-    return this.internalValue.format("MM");
+    return this.value.format("MM");
   }
   get year(): string {
-    return this.internalValue.format("YYYY");
+    return this.value.format("YYYY");
   }
   get hours(): string {
-    return this.internalValue.format("HH");
+    return this.value.format("HH");
   }
   get minutes(): string {
-    return this.internalValue.format("mm");
+    return this.value.format("mm");
   }
 
   get lastDate(): dayjs.Dayjs {
@@ -221,85 +181,85 @@ export default class Controllers extends Vue {
   }
 
   get isLastDate(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
 
-    return this.internalValue.isSame(this.lastDate);
+    return this.value.isSame(this.lastDate);
   }
   get isFirstDate(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
 
-    return this.internalValue.isSame(this.firstDate);
+    return this.value.isSame(this.firstDate);
   }
 
   get isLastYear(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
 
-    return this.internalValue.get("year") === this.lastDate.get("year");
+    return this.value.get("year") === this.lastDate.get("year");
   }
   get isFirstYear(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
 
-    return this.internalValue.get("year") === this.firstDate.get("year");
+    return this.value.get("year") === this.firstDate.get("year");
   }
 
   get isLastMonth(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
-    return this.isLastYear && this.internalValue.get("month") === +this.lastDate.get("month");
+    return this.isLastYear && this.value.get("month") === +this.lastDate.get("month");
   }
   get isFirstMonth(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
-    return this.isFirstYear && this.internalValue.get("month") === this.firstDate.get("month");
+    return this.isFirstYear && this.value.get("month") === this.firstDate.get("month");
   }
 
   get isLastDay(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
-    return this.isLastMonth && this.internalValue.get("date") === +this.lastDate.get("date");
+    return this.isLastMonth && this.value.get("date") === +this.lastDate.get("date");
   }
   get isFirstDay(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
-    return this.isFirstMonth && this.internalValue.get("date") === this.firstDate.get("date");
+    return this.isFirstMonth && this.value.get("date") === this.firstDate.get("date");
   }
 
   get isLastHour(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
-    return this.isLastDay && this.internalValue.get("hour") === +this.lastDate.get("hour");
+    return this.isLastDay && this.value.get("hour") === +this.lastDate.get("hour");
   }
   get isFirstHour(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
-    return this.isFirstDay && this.internalValue.get("hour") === this.firstDate.get("hour");
+    return this.isFirstDay && this.value.get("hour") === this.firstDate.get("hour");
   }
 
   get isLastMinute(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
-    return this.isLastHour && this.internalValue.get("minute") === +this.lastDate.get("minute");
+    return this.isLastHour && this.value.get("minute") === +this.lastDate.get("minute");
   }
   get isFirstMinute(): boolean {
-    if (this.internalValue === null) {
+    if (this.value === null) {
       return false;
     }
-    return this.isFirstHour && this.internalValue.get("minute") === this.firstDate.get("minute");
+    return this.isFirstHour && this.value.get("minute") === this.firstDate.get("minute");
   }
 
   get arrowStyle(): { borderTop: string; borderBottom: string } {
@@ -320,15 +280,6 @@ export default class Controllers extends Vue {
   }
   get playFastDisabled(): boolean {
     return this.timeLapseVelocity === "fast" || this.playDisabled;
-  }
-
-  get sliderData(): { label: string; value: number }[] {
-    const dates = this.sliderOneEvery <= 1 ? this.dates : this.dates.filter((_el, index) => index % this.sliderOneEvery === 0);
-
-    return dates.map((date, index) => ({
-      label: date.format("DD/MM/YYYY HH:mm"),
-      value: index
-    }));
   }
 
   /* WATCHERS */
@@ -376,15 +327,6 @@ export default class Controllers extends Vue {
     background-color: #1d1d1c80;
   }
 
-  .time-lapse {
-    background-color: #1d1d1c80;
-    // overflow-x: hidden;
-
-    > .slider {
-      flex: 1;
-    }
-  }
-
   .time-lapse-legacy {
     background-color: #c1092580;
 
@@ -424,10 +366,6 @@ export default class Controllers extends Vue {
       height: 64px;
     }
   }
-}
-
-.full-width {
-  width: 100%;
 }
 
 .fade-enter-active,
