@@ -5,8 +5,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-import '@/plugins/vueSlider';
-
 import WebFoto from '@/components/WebFoto.vue';
 
 @Component({

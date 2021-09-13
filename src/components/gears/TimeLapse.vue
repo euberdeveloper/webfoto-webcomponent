@@ -14,10 +14,12 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import dayjs from "dayjs";
 
+import VueSlider from "vue-slider-component";
 import ControllerButton from "@/components/shared/ControllerButton.vue";
 
 @Component({
   components: {
+    VueSlider,
     ControllerButton,
   },
 })
@@ -144,5 +146,152 @@ export default class TimeLapse extends Vue {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* shitty fix for webcomponent, the css is embedded here but even modified */
+.slider ::v-deep {
+  /* component style */
+  .vue-slider-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* rail style */
+  .vue-slider-rail {
+    background-color: #ccc;
+    border-radius: 15px;
+    // Modified by me
+    position: relative;
+    height: 4px;
+  }
+
+  /* process style */
+  .vue-slider-process {
+    background-color: #3498db;
+    border-radius: 15px;
+  }
+
+  /* mark style */
+  .vue-slider-marks {
+    width: 100%;
+    // Modified by me
+    position: absolute;
+    height: 4px;
+    top: 0;
+    left: 0;
+  }
+  .vue-slider-mark {
+    z-index: 4;
+    // Modified by me
+    position: absolute;
+    top: 0;
+  }
+  .vue-slider-mark:first-child .vue-slider-mark-step,
+  .vue-slider-mark:last-child .vue-slider-mark-step {
+    display: none;
+  }
+  .vue-slider-mark-step {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.16);
+  }
+  .vue-slider-mark-label {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  /* dot style */
+  .vue-slider-dot {
+    // Modified by me
+    position: relative;
+    top: calc(50% - 4px)!important;
+  }
+  .vue-slider-dot-handle {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #fff;
+    box-sizing: border-box;
+    box-shadow: 0.5px 0.5px 2px 1px rgba(0, 0, 0, 0.32);
+  }
+  .vue-slider-dot-handle-focus {
+    box-shadow: 0px 0px 1px 2px rgba(52, 152, 219, 0.36);
+  }
+
+  .vue-slider-dot-handle-disabled {
+    cursor: not-allowed;
+    background-color: #ccc;
+  }
+
+  .vue-slider-dot-tooltip-inner {
+    display: none;
+    font-size: 14px;
+    white-space: nowrap;
+    padding: 2px 5px;
+    min-width: 20px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+    border-color: #3498db;
+    background-color: #3498db;
+    box-sizing: content-box;
+  }
+  .vue-slider-dot-tooltip-inner::after {
+    content: "";
+    position: absolute;
+  }
+  .vue-slider-dot-tooltip-inner-top::after {
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 0;
+    width: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px;
+    border-top-color: inherit;
+  }
+  .vue-slider-dot-tooltip-inner-bottom::after {
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 0;
+    width: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px;
+    border-bottom-color: inherit;
+  }
+  .vue-slider-dot-tooltip-inner-left::after {
+    left: 100%;
+    top: 50%;
+    transform: translate(0, -50%);
+    height: 0;
+    width: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px;
+    border-left-color: inherit;
+  }
+  .vue-slider-dot-tooltip-inner-right::after {
+    right: 100%;
+    top: 50%;
+    transform: translate(0, -50%);
+    height: 0;
+    width: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px;
+    border-right-color: inherit;
+  }
+
+  .vue-slider-dot-tooltip-wrapper {
+    opacity: 0;
+    transition: all 0.3s;
+  }
+  .vue-slider-dot-tooltip-wrapper-show {
+    opacity: 1;
+  }
 }
 </style>
