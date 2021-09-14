@@ -37,7 +37,6 @@ export default class TimeLapse extends Vue {
 
   /* DATA */
 
-  private sliderValue = 0;
   private show = false;
   private started = false;
   private interval = -1;
@@ -79,7 +78,7 @@ export default class TimeLapse extends Vue {
   start(): void {
     this.started = true;
     this.interval = setInterval(() => {
-      this.wrapperSliderValue = (this.wrapperSliderValue + 1) % this.timeLapseMaxItems;
+      this.wrapperSliderValue = (this.wrapperSliderValue + 1) % this.sliderData.length;
     }, 1500);
   }
   stop(): void {
