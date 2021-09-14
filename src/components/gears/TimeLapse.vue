@@ -4,7 +4,7 @@
       <div class="container controller-block">
         <controller-button class="button" icon="play" @click="start" v-if="!started" />
         <controller-button class="button" icon="pause" @click="stop" v-else />
-        <vue-slider class="slider" v-model="wrapperSliderValue" :tooltipPlacement="sliderTooltipPlacement" :data="sliderData" hideLabel contained lazy />
+        <vue-slider class="slider" v-model="wrapperSliderValue" :tooltipPlacement="sliderTooltipPlacement" :data="sliderData" :dotSize="16" hideLabel contained lazy />
       </div>
     </div>
   </transition>
