@@ -204,7 +204,7 @@ export default class TimeLapse extends Vue {
   .vue-slider-dot {
     // Modified by me
     position: relative;
-    top: calc(50% - 4px)!important;
+    top: calc(50% - 4px) !important;
   }
   .vue-slider-dot-handle {
     cursor: pointer;
@@ -224,8 +224,29 @@ export default class TimeLapse extends Vue {
     background-color: #ccc;
   }
 
+  .vue-slider-dot-tooltip {
+    // Modified by me
+    position: absolute;
+  }
+  .vue-slider-dot-tooltip-top {
+    // Modified by me
+    top: -10px;
+    left: 50%;
+    transform: translate(-50%, -100%);
+  }
+  .vue-slider-dot-tooltip-left {
+    // Modified by me
+    left: -10px;
+    top: 50%;
+    transform: translate(-100%, -50%);
+  }
+  .vue-slider-dot-tooltip-right {
+    // Modified by me
+    right: -10px;
+    top: 50%;
+    transform: translate(100%, -50%);
+  }
   .vue-slider-dot-tooltip-inner {
-    display: none;
     font-size: 14px;
     white-space: nowrap;
     padding: 2px 5px;
