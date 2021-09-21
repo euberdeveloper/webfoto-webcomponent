@@ -10,7 +10,7 @@
       :loading.sync="loadingImage"
       v-if="currentImagePath"
     />
-    <loading-spinner class="loading-spinner" :style="zIndexStyle" :color="spinnerColor" :show="loadingImage" />
+    <loading-spinner class="loading-spinner" :style="zIndexStyle" :color="spinnerColor" :show="loadingImage" v-if="showSpinner" />
     <controllers
       class="controllers"
       :style="zIndexStyle"
@@ -113,6 +113,9 @@ export default class WebFoto extends Vue {
 
   @Prop({ type: String, required: false })
   spinnerColor?: string;
+
+  @Prop({ type: Boolean, default: true })
+  showSpinner!: boolean;
 
   @Prop({ type: String, required: false })
   logoSrc?: string;
