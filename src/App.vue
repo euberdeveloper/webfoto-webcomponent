@@ -6,7 +6,7 @@
     name="hotelvillaletizia"
     width="100%"
     height="100%"
-    youtube-id="3659fTXvFts"
+    youtube-id="UGuUf7KJq5M"
   />
 </template>
 
