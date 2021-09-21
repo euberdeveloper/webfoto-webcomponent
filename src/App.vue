@@ -7,6 +7,7 @@
     width="100%"
     height="100%"
     youtube-id="UGuUf7KJq5M"
+    showSpinner
   />
 </template>
 
