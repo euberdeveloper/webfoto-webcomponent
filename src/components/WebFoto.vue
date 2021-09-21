@@ -114,7 +114,7 @@ export default class WebFoto extends Vue {
   @Prop({ type: String, required: false })
   spinnerColor?: string;
 
-  @Prop({ type: Boolean, default: true })
+  @Prop({ type: Boolean, default: false })
   showSpinner!: boolean;
 
   @Prop({ type: String, required: false })
