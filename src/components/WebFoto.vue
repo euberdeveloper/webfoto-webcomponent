@@ -61,7 +61,7 @@ import dayjs from "dayjs";
 
 import { Extent, PlayVelocity } from "@/types";
 import { getImages } from "@/utils/api";
-import setDayjsLocale from '@/utils/dayjsLocale';
+import setDayjsLocale from "@/utils/dayjsLocale";
 
 import ImageDisplayer from "@/components/gears/ImageDisplayer.vue";
 import LoadingSpinner from "@/components/gears/LoadingSpinner.vue";
@@ -69,6 +69,8 @@ import Controllers from "@/components/gears/Controllers.vue";
 import TimeLapse from "@/components/gears/TimeLapse.vue";
 import Actions from "@/components/gears/Actions.vue";
 import BrandLogo from "@/components/gears/BrandLogo.vue";
+
+import 'share-api-polyfill';
 
 @Component({
   components: {
@@ -213,10 +215,18 @@ export default class WebFoto extends Vue {
   }
 
   share(): void {
-    const textToCopy = this.currentImagePath || "";
-    clipboardCopy(textToCopy);
-    this.textCopied = true;
-    setTimeout(() => (this.textCopied = false), 2000);
+    const textToShare = this.currentImagePath || "";
+
+    if ((window.navigator as any).share) {
+      window.navigator.share({
+        title: this.name,
+        url: textToShare
+      });
+    } else {
+      clipboardCopy(textToShare);
+      this.textCopied = true;
+      setTimeout(() => (this.textCopied = false), 2000);
+    }
   }
 
   sliderChanged(index: number): void {
