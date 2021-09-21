@@ -26,6 +26,5 @@ export default class YouTube extends Vue {
 .you-tube {
   width: 100%;
   height: 100%;
-  background: black;
 }
 </style>
