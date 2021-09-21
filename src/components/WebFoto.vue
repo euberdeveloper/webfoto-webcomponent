@@ -40,14 +40,23 @@
       @slider="sliderChanged($event)"
       v-if="currentImageDate && showTimeLapse && !legacyTimeLapse"
     />
+    <you-tube
+      class="you-tube"
+      :style="zIndexStyle"
+      :youtubeId="youtubeId"
+      v-if="youtubeId && showYoutube"
+    />
     <actions
       class="actions"
       :style="zIndexStyle"
       :showActions="showActions"
       :textCopied="textCopied"
       :showTimeLapse="showTimeLapse"
+      :showYoutube="showYoutube"
+      :youtubeAvailable="!!youtubeId"
       @share="share"
       @timelapse="showTimeLapse = !showTimeLapse"
+      @youtube="showYoutube = !showYoutube"
     />
     <brand-logo class="brand-logo" :style="zIndexStyle" :src="logoSrc" :href="logoHref" :width="logoWidth" :widthMobile="logoWidthMobile" v-if="logoSrc" />
   </div>
@@ -69,6 +78,7 @@ import Controllers from "@/components/gears/Controllers.vue";
 import TimeLapse from "@/components/gears/TimeLapse.vue";
 import Actions from "@/components/gears/Actions.vue";
 import BrandLogo from "@/components/gears/BrandLogo.vue";
+import YouTube from "@/components/gears/YouTube.vue";
 
 import 'share-api-polyfill';
 
@@ -80,6 +90,7 @@ import 'share-api-polyfill';
     TimeLapse,
     Actions,
     BrandLogo,
+    YouTube
   },
 })
 export default class WebFoto extends Vue {
@@ -124,6 +135,9 @@ export default class WebFoto extends Vue {
   @Prop({ type: Number, default: 200 })
   timeLapseMaxItems!: number;
 
+  @Prop({ type: String, required: false })
+  youtubeId?: string;
+
   /* DATA */
 
   private images: dayjs.Dayjs[] = [];
@@ -132,6 +146,7 @@ export default class WebFoto extends Vue {
   private showActions = false;
   private textCopied = false;
   private showTimeLapse = false;
+  private showYoutube = false;
   private timeLapseVelocity: PlayVelocity | null = null;
   private timeLapseinterval: number | null = null;
   private timeLapseQuantity = -1;
@@ -166,6 +181,7 @@ export default class WebFoto extends Vue {
       zIndex: this.minZindex + 1,
     };
   }
+
 
   /* METHODS */
 
@@ -303,6 +319,12 @@ export default class WebFoto extends Vue {
     top: 100%;
     left: 50%;
     transform: translate(-50%, -100%);
+  }
+
+  .you-tube {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   .actions {

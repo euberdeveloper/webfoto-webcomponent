@@ -3,6 +3,7 @@
     <transition-group name="actions" tag="div" class="container">
       <action-button class="button" icon="share" :text="shareText" :color="shareColor" :active="textCopied" key="share" @click="$emit('share')" v-if="showActions" />
       <action-button class="button" icon="update" text="Time lapse" key="time-lapse" :active="showTimeLapse" @click="$emit('timelapse')" v-if="showActions" />
+      <action-button class="button" icon="youtube" text="YouTube" key="you-tube" :active="showYoutube" @click="$emit('youtube')" v-if="showActions && youtubeAvailable" />
     </transition-group>
   </div>
 </template>
@@ -20,14 +21,20 @@ import ActionButton from "@/components/shared/ActionButton.vue";
 export default class Actions extends Vue {
   /* PROPS */
 
-  @Prop({ type: Boolean, default: true })
+  @Prop({ type: Boolean, required: true })
   showActions!: boolean;
 
-  @Prop({ type: Boolean, default: true })
+  @Prop({ type: Boolean, required: true })
   textCopied!: boolean;
 
-  @Prop({ type: Boolean, default: false })
+  @Prop({ type: Boolean, required: true })
   showTimeLapse!: boolean;
+
+  @Prop({ type: Boolean, required: true })
+  showYoutube!: boolean;
+
+  @Prop({ type: Boolean, required: true })
+  youtubeAvailable!: boolean;
 
   /* GETTERS */
 
