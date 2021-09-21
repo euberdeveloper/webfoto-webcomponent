@@ -1,5 +1,5 @@
 <template>
-  <web-foto class="web-foto" api-url="https://api.fotowebcam.it/api/index.php" images-url="https://api.fotowebcam.it/albums" name="hotelvillaletizia" width="100%" height="100%" logo-src="https://it.addicted-sports.com/fileadmin/bw/LakeGarda-KiteandSurfSchool.png" logo-href="http://www.google.it" />
+  <web-foto class="web-foto" api-url="https://api.fotowebcam.it/api/index.php" images-url="https://api.fotowebcam.it/albums" name="hotelvillaletizia" width="100%" height="100%" />
 </template>
 
 <script lang="ts">
