@@ -1,24 +1,33 @@
 <template>
-  <web-foto class="web-foto" api-url="https://api.fotowebcam.it/api/index.php" images-url="https://api.fotowebcam.it/albums" name="hotelvillaletizia" width="100%" height="100%" />
+  <web-foto
+    class="web-foto"
+    api-url="https://api.fotowebcam.it/api/index.php"
+    images-url="https://api.fotowebcam.it/albums"
+    name="hotelvillaletizia"
+    width="100%"
+    height="100%"
+    youtube-id="3659fTXvFts"
+  />
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-import WebFoto from '@/components/WebFoto.vue';
+import WebFoto from "@/components/WebFoto.vue";
 
 @Component({
   components: {
-    WebFoto
-  }
+    WebFoto,
+  },
 })
-export default class App extends Vue {
-}
+export default class App extends Vue {}
 </script>
 
 
 <style lang="scss">
-html, body, #app {
+html,
+body,
+#app {
   width: 100%;
   height: 100%;
 }
