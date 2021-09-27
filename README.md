@@ -2,7 +2,7 @@
 
 This is the webcomponent of the project "Webfoto".
 
-https://user-images.githubusercontent.com/33126163/129527900-d0bcbfe7-8fcf-4743-a627-e141fa412e94.mp4
+https://user-images.githubusercontent.com/33126163/134882153-8f02807b-11a7-4d6f-9e7b-12da96f36866.mp4
 
 ## The project
 
