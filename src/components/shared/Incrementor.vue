@@ -46,18 +46,19 @@ $arrow-size-mobile: 7px;
     left: -$arrow-size-mobile;
   }
 
-  &:hover {
-    border-bottom-color: red;
-    border-top-color: red;
-  }
-  &:active {
-    border-bottom-color: #ad0000;
-    border-top-color: #ad0000;
-  }
-
   @if $disabled {
     border-bottom-color: #9a9ea1;
     border-top-color: #9a9ea1;
+    cursor: default;
+  } @else {
+    &:hover {
+      border-bottom-color: red;
+      border-top-color: red;
+    }
+    &:active {
+      border-bottom-color: #ad0000;
+      border-top-color: #ad0000;
+    }
   }
 }
 
