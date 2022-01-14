@@ -36,6 +36,7 @@
       :style="zIndexStyle"
       :dates="images"
       :timeLapseMaxItems="timeLapseMaxItems"
+      :timeLapseInterval="timeLapseInterval"
       :currentImageIndex.sync="currentImageIndex"
       @slider="sliderChanged($event)"
       v-if="currentImageDate && showTimeLapse && !legacyTimeLapse"
@@ -137,6 +138,9 @@ export default class WebFoto extends Vue {
 
   @Prop({ type: Number, default: 200 })
   timeLapseMaxItems!: number;
+
+  @Prop({ type: Number, default: 1500 })
+  timeLapseInterval!: number;
 
   @Prop({ type: String, required: false })
   youtubeId?: string;

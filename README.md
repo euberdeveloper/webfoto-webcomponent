@@ -1,4 +1,4 @@
-# webfoto-webcomponent
+****# webfoto-webcomponent
 
 This is the webcomponent of the project "Webfoto".
 
@@ -40,6 +40,7 @@ The web component just needs that its script is included in the header (or in th
 | min-zindex           | number  | :white_check_mark: | -1        | It is used to fix a problem that was faced about the z-index property. To swap the image, it usually sets `z-index: -1` to the displayed one ant `z-index: 0` to the image that will fade. By setting `min-zindex: x`, the displayed image will have `z-index: x` while the faded image (and all the controls) will have `z-index: x + 1` |
 | legacy-time-lapse    | boolean | :white_check_mark: | false     | It determines if the legacy timelapse (a red control with play/pause button and inputs to decide how big each step is) instead of the default one (the one with the slider)                                                                                                                                                               |
 | time-lapse-max-items | number  | :white_check_mark: | 200       | Because the default timelapse's slider can not support thousands of images, they are selected with a regular gap between them. This property says how many images are kept.                                                                                                                                                               |
+| time-lapse-interval | number  | :white_check_mark: | 1500       | The interval in milliseconds between two time-lapsed images.                                                                                                                                                               |
 | youtube-id           | string  | :white_check_mark: | undefined | The id of a youtube video that ideally is a live stream of the camera. If set, there will be a button to show it instead of the images.                                                                                                                                                                                                   |
 
 ### Example:
