@@ -1,4 +1,4 @@
-# 403 - Permanently moved to the [Dev-digitalgarda organization](https://github.com/Dev-digitalgarda)
+# 301 - Permanently moved to the [Dev-digitalgarda organization](https://github.com/Dev-digitalgarda)
 
 # webfoto-webcomponent
 
